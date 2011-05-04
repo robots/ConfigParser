@@ -1,0 +1,5 @@
+
+public enum OptionType {
+	UNDEF, BOOLEAN, SIGNED, UNSIGNED, FLOAT, ENUM, STRING 
+
+}
