@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="windows-1250"?>
+<project basedir="." default="compile" name="IniParser">
+	<description>Library for parsing .ini files</description>
+
+	<property name="src" location="." />
+	<property name="classes" location="classes" />
+	<property name="doc" location="doc" />
+
+	<target name="compile">
+		<mkdir dir="${classes}"/>
+		<javac 
+			destdir="${classes}"
+			srcdir="${src}"
+			includes="./*.java"
+			includeAntRuntime="yes"
+		/>
+	</target>
+			
+
+
+	<target name="doc" description="dokumentace">
+		<mkdir dir="${doc}"/>
+		<javadoc sourcefiles="${src}/*.java" destdir="${doc}"/>
+	</target>
+</project>
