@@ -47,6 +47,7 @@ public interface IniSection {
 	public IniOption getOption(String option);
 	
 	public void accept (IniVisitor visitor);
+	
 	/*
 	public IniOption defineOptList(String option, String code, char delim);
 	public IniOption defineOptList(String option, String code, char delim, List<String> defaultValues);

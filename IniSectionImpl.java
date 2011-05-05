@@ -13,11 +13,12 @@ public class IniSectionImpl implements IniSection {
 	public IniSectionImpl(String name, IniParser parser) {
 		this.parser = parser;
 		optionMap = new HashMap<String, IniOption>();
+		this.name = name;
 	}
 
 	@Override
 	public IniOption defineOptBoolean(String option) {
-		IniOption opt = new IniOption(OptionType.BOOLEAN, false, true);
+		IniOption opt = new IniOption(option, OptionType.BOOLEAN, false, true);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -25,7 +26,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptBoolean(String option, boolean defaultValue) {
-		IniOption opt = new IniOption(OptionType.BOOLEAN, false);
+		IniOption opt = new IniOption(option, OptionType.BOOLEAN, false);
 		Element defVal = new Element();
 
 		defVal.setValue(Boolean.toString(defaultValue));
@@ -37,7 +38,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptEnum(String option, String enumName) {
-		IniOption opt = new IniOption(OptionType.ENUM, false, true);
+		IniOption opt = new IniOption(option, OptionType.ENUM, false, true);
 		opt.setEnumName(enumName);
 		optionMap.put(option, opt);
 
@@ -47,7 +48,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptEnum(String option, String enumName,
 			String defaultValue) throws Exception {
-		IniOption opt = new IniOption(OptionType.ENUM, false);
+		IniOption opt = new IniOption(option, OptionType.ENUM, false);
 		
 		if (! parser.isValidForEnum(enumName, defaultValue))
 			throw new Exception("Invalid value");
@@ -65,7 +66,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptFloat(String option) {
-		IniOption opt = new IniOption(OptionType.FLOAT, false, true);
+		IniOption opt = new IniOption(option, OptionType.FLOAT, false, true);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -73,7 +74,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptFloat(String option, float defaultValue) {
-		IniOption opt = new IniOption(OptionType.FLOAT, false);
+		IniOption opt = new IniOption(option, OptionType.FLOAT, false);
 		Element defVal = new Element();
 
 		defVal.setValue(Float.toString(defaultValue));
@@ -85,7 +86,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptSigned(String option) {
-		IniOption opt = new IniOption(OptionType.SIGNED, false, true);
+		IniOption opt = new IniOption(option, OptionType.SIGNED, false, true);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -93,7 +94,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptSigned(String option, BigInteger defaultValue) {
-		IniOption opt = new IniOption(OptionType.SIGNED, false);
+		IniOption opt = new IniOption(option, OptionType.SIGNED, false);
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
@@ -105,7 +106,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptString(String option) {
-		IniOption opt = new IniOption(OptionType.STRING, false, true);
+		IniOption opt = new IniOption(option, OptionType.STRING, false, true);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -113,7 +114,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptString(String option, String defaultValue) {
-		IniOption opt = new IniOption(OptionType.STRING, false);
+		IniOption opt = new IniOption(option, OptionType.STRING, false);
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue);
@@ -125,7 +126,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptUnsigned(String option) {
-		IniOption opt = new IniOption(OptionType.UNSIGNED, false, true);
+		IniOption opt = new IniOption(option, OptionType.UNSIGNED, false, true);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -133,7 +134,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptUnsigned(String option, BigInteger defaultValue) {
-		IniOption opt = new IniOption(OptionType.UNSIGNED, false);
+		IniOption opt = new IniOption(option, OptionType.UNSIGNED, false);
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
@@ -153,7 +154,7 @@ public class IniSectionImpl implements IniSection {
 	 */
 	@Override
 	public IniOption defineOptListBoolean(String option, char delimiter) {
-		IniOption opt = new IniOption(OptionType.BOOLEAN, true, true);
+		IniOption opt = new IniOption(option, OptionType.BOOLEAN, true, true);
 		opt.setDelimiter(delimiter);
 		optionMap.put(option, opt);
 
@@ -164,7 +165,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListBoolean(String option, char delimiter, 
 		List<Boolean> defaultValue) {
 		
-		IniOption opt = new IniOption(OptionType.BOOLEAN, true);
+		IniOption opt = new IniOption(option, OptionType.BOOLEAN, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 		
@@ -184,7 +185,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListEnum(String option, String enumName, 
 		char delimiter) {
 		
-		IniOption opt = new IniOption(OptionType.ENUM, true, true);
+		IniOption opt = new IniOption(option, OptionType.ENUM, true, true);
 		opt.setEnumName(enumName);
 		opt.setDelimiter(delimiter);
 		
@@ -197,7 +198,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListEnum(String option, String enumName,
 		char delimiter, List<String> defaultValue) throws Exception{
 		
-		IniOption opt = new IniOption(OptionType.ENUM, true);
+		IniOption opt = new IniOption(option, OptionType.ENUM, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 
@@ -220,7 +221,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListFloat(String option, char delimiter) {
-		IniOption opt = new IniOption(OptionType.FLOAT, true, true);
+		IniOption opt = new IniOption(option, OptionType.FLOAT, true, true);
 		opt.setDelimiter(delimiter);
 		optionMap.put(option, opt);
 
@@ -231,7 +232,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListFloat(String option, char delimiter, 
 		List<Float> defaultValue) {
 		
-		IniOption opt = new IniOption(OptionType.FLOAT, true);
+		IniOption opt = new IniOption(option, OptionType.FLOAT, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 
@@ -249,7 +250,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListSigned(String option, char delimiter) {
-		IniOption opt = new IniOption(OptionType.SIGNED, true, true);
+		IniOption opt = new IniOption(option, OptionType.SIGNED, true, true);
 		opt.setDelimiter(delimiter);
 		optionMap.put(option, opt);
 
@@ -260,7 +261,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListSigned(String option,
 		char delimiter,	List<BigInteger> defaultValue) {
 		
-		IniOption opt = new IniOption(OptionType.SIGNED, true);
+		IniOption opt = new IniOption(option, OptionType.SIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 
@@ -278,7 +279,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListString(String option, char delimiter) {
-		IniOption opt = new IniOption(OptionType.STRING, true, true);
+		IniOption opt = new IniOption(option, OptionType.STRING, true, true);
 		opt.setDelimiter(delimiter);
 		optionMap.put(option, opt);
 
@@ -289,7 +290,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListString(String option,
 		char delimiter, List<String> defaultValue) {
 		
-		IniOption opt = new IniOption(OptionType.STRING, true);
+		IniOption opt = new IniOption(option, OptionType.STRING, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 
@@ -307,7 +308,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListUnsigned(String option, char delimiter) {
-		IniOption opt = new IniOption(OptionType.UNSIGNED, true, true);
+		IniOption opt = new IniOption(option, OptionType.UNSIGNED, true, true);
 		opt.setDelimiter(delimiter);
 		optionMap.put(option, opt);
 
@@ -318,7 +319,7 @@ public class IniSectionImpl implements IniSection {
 	public IniOption defineOptListUnsigned(String option,
 		char delimiter,	List<BigInteger> defaultValue) {
 		
-		IniOption opt = new IniOption(OptionType.UNSIGNED, true);
+		IniOption opt = new IniOption(option, OptionType.UNSIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
 
@@ -356,4 +357,5 @@ public class IniSectionImpl implements IniSection {
 		}
 		
 	}
+
 }
