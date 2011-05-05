@@ -29,7 +29,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(Boolean.toString(defaultValue));
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -55,7 +55,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 		defVal.setValue(defaultValue);
 		
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		opt.setEnumName(enumName);
 		
 		optionMap.put(option, opt);
@@ -77,7 +77,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(Float.toString(defaultValue));
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -97,7 +97,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -117,7 +117,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue);
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -137,7 +137,7 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
-		opt.setDefaultValue(defVal);
+		opt.setDefaultElement(defVal);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -163,6 +163,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListBoolean(String option, char delimiter, 
 		List<Boolean> defaultValue) {
+		
 		IniOption opt = new IniOption(OptionType.BOOLEAN, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -173,7 +174,7 @@ public class IniSectionImpl implements IniSection {
 			defaultValues.add(element);
 		}
 
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -182,6 +183,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListEnum(String option, String enumName, 
 		char delimiter) {
+		
 		IniOption opt = new IniOption(OptionType.ENUM, true, true);
 		opt.setEnumName(enumName);
 		opt.setDelimiter(delimiter);
@@ -194,6 +196,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListEnum(String option, String enumName,
 		char delimiter, List<String> defaultValue) throws Exception{
+		
 		IniOption opt = new IniOption(OptionType.ENUM, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -209,7 +212,7 @@ public class IniSectionImpl implements IniSection {
 		}
 
 		opt.setEnumName(enumName);
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -227,6 +230,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListFloat(String option, char delimiter, 
 		List<Float> defaultValue) {
+		
 		IniOption opt = new IniOption(OptionType.FLOAT, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -237,7 +241,7 @@ public class IniSectionImpl implements IniSection {
 			defaultValues.add(element);
 		}
 
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -255,6 +259,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListSigned(String option,
 		char delimiter,	List<BigInteger> defaultValue) {
+		
 		IniOption opt = new IniOption(OptionType.SIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -265,7 +270,7 @@ public class IniSectionImpl implements IniSection {
 			defaultValues.add(element);
 		}
 
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -283,6 +288,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListString(String option,
 		char delimiter, List<String> defaultValue) {
+		
 		IniOption opt = new IniOption(OptionType.STRING, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -293,7 +299,7 @@ public class IniSectionImpl implements IniSection {
 			defaultValues.add(element);
 		}
 
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -311,6 +317,7 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListUnsigned(String option,
 		char delimiter,	List<BigInteger> defaultValue) {
+		
 		IniOption opt = new IniOption(OptionType.UNSIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
 		opt.setDelimiter(delimiter);
@@ -321,7 +328,7 @@ public class IniSectionImpl implements IniSection {
 			defaultValues.add(element);
 		}
 
-		opt.setDefaultValues(defaultValues);
+		opt.setDefaultElementList(defaultValues);
 		optionMap.put(option, opt);
 
 		return opt;
@@ -331,4 +338,12 @@ public class IniSectionImpl implements IniSection {
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public IniOption getOption(String option) {
+		IniOption opt = optionMap.get(option);
+		
+		return opt;
+	}
+
 }
