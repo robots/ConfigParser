@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class IniOption {
+	private String name;
 	private boolean isList;
 	private OptionType type;
 	private boolean mandatory;
@@ -14,18 +15,22 @@ public class IniOption {
 	private String enumName;
 	private char delimiter;
 	
-	public IniOption(OptionType type, boolean isList) {
+	private void init(String name, OptionType type, boolean isList )
+	{
+		this.name = name;
 		this.defaultValueList = new LinkedList<Element>();
 		this.mandatory = false;
 		this.type = type;
 		this.isList = isList;
 	}
 	
-	public IniOption(OptionType type, boolean isList, boolean mandatory) {
-		this.defaultValueList = new LinkedList<Element>();
+	public IniOption(String name, OptionType type, boolean isList) {
+		init(name, type, isList);
+	}
+	
+	public IniOption(String name, OptionType type, boolean isList, boolean mandatory) {
+		init(name, type, isList);
 		this.mandatory = mandatory;
-		this.type = type;
-		this.isList = isList;
 	}
 
 	public boolean isMandatory() {
@@ -104,46 +109,46 @@ public class IniOption {
 		if(this.type != OptionType.BOOLEAN)
 			throw new BadTypeException("Requested option is not of type Boolean");
 		
-		return Boolean.parseBoolean(getElement().getValue());
+		return Boolean.parseBoolean(this.getValue());
 	}
 	
 	public BigInteger getValueSigned() throws BadTypeException {
 		if(this.type != OptionType.SIGNED)
 			throw new BadTypeException("Requested option is not of type Signed");
 		
-		return new BigInteger(getElement().getValue());
+		return new BigInteger(this.getValue());
 	}
 	
 	public BigInteger getValueUnsigned() throws BadTypeException {		
 		if(this.type != OptionType.UNSIGNED)
 			throw new BadTypeException("Requested option is not of type Unsigned");
 		
-		return new BigInteger(getElement().getValue());
+		return new BigInteger(this.getValue());
 	}
 	
 	public float getValueFloat() throws BadTypeException {
 		if(this.type != OptionType.FLOAT)
 			throw new BadTypeException("Requested option is not of type Float");
 		
-		return Float.parseFloat(getElement().getValue());
+		return Float.parseFloat(this.getValue());
 	}
 	
 	public String getValueEnum() throws BadTypeException {
 		if(this.type != OptionType.ENUM)
 			throw new BadTypeException("Requested option is not of type Enum");
 		
-		return getElement().getValue();
+		return this.getValue();
 	}
 	
 	public String getValueString() throws BadTypeException {
 		if(this.type != OptionType.STRING)
 			throw new BadTypeException("Requested option is not of type String");
 		
-		return getElement().getValue();
+		return this.getValue();
 	}
 	
-	public String getValueUntyped() {
-		return getElement().getValue();
+	public String getValueUntyped() throws BadTypeException {
+		return getValue();
 	}
 	
 	
@@ -156,17 +161,40 @@ public class IniOption {
 		this.setValue(value.toString());
 	}
 	
-	public void setValue(float value)
-	{
+	public void setValue(float value) {
 		this.setValue(Float.toString(value));
 	}
 	
-	public void setValue(boolean value)
-	{
+	public void setValue(boolean value)	{
 		this.setValue(Boolean.toString(value));
 	}
+	
 	public void accept(IniVisitor visitor){
 		visitor.visit(this);		
 	}
 
+	public String getName() {	
+		return name;
+	}
+	
+	public OptionType getType() {
+		return this.type;
+	}
+	
+	private String getValue() throws BadTypeException
+	{
+		if(this.isList())
+			throw new BadTypeException("List option accessed as single-value option");
+		
+		List<Element> listVal = valueList;
+		
+		if(listVal== null)
+			listVal = defaultValueList;
+		
+		if(listVal == null)
+			return null;
+		
+		return listVal.get(0).getValue();
+		
+	}
 }
