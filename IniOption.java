@@ -151,6 +151,107 @@ public class IniOption {
 		return getValue();
 	}
 	
+	public List<Boolean> getValueListBool() throws BadTypeException {
+		
+		if(this.type != OptionType.BOOLEAN)
+			throw new BadTypeException("Requested option is not of type Boolean");
+		
+		List<Element> elementValues = this.getValueList();
+		List<Boolean> resultList = new LinkedList<Boolean>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add(Boolean.parseBoolean(element.getValue()));
+		}
+		
+		return resultList;
+		
+	}
+
+	public List<String> getValueListString() throws BadTypeException {
+		
+		if(this.type != OptionType.STRING)
+			throw new BadTypeException("Requested option is not of type String");
+		
+		List<Element> elementValues = this.getValueList();
+		List<String> resultList = new LinkedList<String>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add(element.getValue());
+		}
+		
+		return resultList;
+		
+	}
+
+	public List<Float> getValueListFloat() throws BadTypeException {
+		
+		if(this.type != OptionType.FLOAT)
+			throw new BadTypeException("Requested option is not of type Float");
+		
+		List<Element> elementValues = this.getValueList();
+		List<Float> resultList = new LinkedList<Float>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add(Float.parseFloat(element.getValue()));
+		}
+		
+		return resultList;
+		
+	}
+
+	public List<BigInteger> getValueListSigned() throws BadTypeException {
+		
+		if(this.type != OptionType.SIGNED)
+			throw new BadTypeException("Requested option is not of type Signed");
+		
+		List<Element> elementValues = this.getValueList();
+		List<BigInteger> resultList = new LinkedList<BigInteger>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add( new BigInteger(element.getValue()));
+		}
+		
+		return resultList;
+		
+	}
+	
+	public List<BigInteger> getValueListUnsigned() throws BadTypeException {
+		
+		if(this.type != OptionType.UNSIGNED)
+			throw new BadTypeException("Requested option is not of type Unsigned");
+		
+		List<Element> elementValues = this.getValueList();
+		List<BigInteger> resultList = new LinkedList<BigInteger>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add( new BigInteger(element.getValue()));
+		}
+		
+		return resultList;
+		
+	}
+	
+	public List<String> getValueListEnum() throws BadTypeException {
+		
+		if(this.type != OptionType.ENUM)
+			throw new BadTypeException("Requested option is not of type Enum");
+		
+		List<Element> elementValues = this.getValueList();
+		List<String> resultList = new LinkedList<String>();
+		
+		for(Element element : elementValues)
+		{
+			resultList.add(element.getValue());
+		}
+		
+		return resultList;
+		
+	}
 	
 	public void setValue(String value) {
 		this.valueList.clear();
@@ -196,5 +297,24 @@ public class IniOption {
 		
 		return listVal.get(0).getValue();
 		
+	}
+
+	private List<Element> getValueList() throws BadTypeException {
+		
+		if( ! this.isList())
+			throw new BadTypeException("Single-value option accessed as list option");
+		
+		List<Element> listVal = valueList;
+		
+		if(listVal== null)
+			listVal = defaultValueList;
+		
+		return listVal;
+		
+	}
+	
+	public boolean isList()
+	{
+		return this.isList;
 	}
 }
