@@ -43,13 +43,8 @@ public interface IniSection {
 	
 	public IniOption defineOptListEnum(String option, String enumName, char delimiter);
 	public IniOption defineOptListEnum(String option, String enumName, char delimiter, List<String> defaultValue) throws Exception;
-	
-	public String getString(String option);
-	public float getFloat(String option);
-	public boolean getBoolean(String option);
-	public void getSigned(String option);
-	public void getUnsigned(String option);
-	public String getEnum(String option);
+
+	public IniOption getOption(String option);
 	
 	/*
 	public IniOption defineOptList(String option, String code, char delim);
