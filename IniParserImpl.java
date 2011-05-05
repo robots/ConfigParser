@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,12 @@ public class IniParserImpl implements IniParser {
 	
 	private Map<String, IniSection> sectionMap;
 	private Map<String, Set<String> > enumMap;
+	
+	public IniParserImpl()
+	{
+		sectionMap = new HashMap<String, IniSection>();
+		enumMap = new HashMap<String, Set<String>> ();
+	}
 
 	@Override
 	public IniSection addSection(String sectionName) {
@@ -99,7 +106,7 @@ public class IniParserImpl implements IniParser {
 	}
 	
 	@Override
-	public String getUntyped(String sectionName, String option) {
+	public String getUntyped(String sectionName, String option) throws BadTypeException {
 		IniSection section = sectionMap.get(sectionName);
 		IniOption opt = section.getOption(option);
 		
@@ -440,4 +447,5 @@ public class IniParserImpl implements IniParser {
 		}
 		
 	}
+
 }

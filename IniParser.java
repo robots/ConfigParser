@@ -21,7 +21,7 @@ public interface IniParser {
 	public BigInteger getSigned(String sectionName, String option) throws BadTypeException;
 	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException;
 	public String getEnum(String sectionName, String option) throws BadTypeException;
-	public String getUntyped(String sectionName, String option);
+	public String getUntyped(String sectionName, String option) throws BadTypeException;
 	
 	public void setString(String sectionName, String option, String value);
 	public void setFloat(String sectionName, String option, float value);
@@ -63,6 +63,7 @@ public interface IniParser {
 	public boolean isValidForEnum(String enumName, String value);
 	
 	public void accept (IniVisitor visitor);
+	
 	
 
 }
