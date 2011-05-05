@@ -165,5 +165,8 @@ public class IniOption {
 	{
 		this.setValue(Boolean.toString(value));
 	}
+	public void accept(IniVisitor visitor){
+		visitor.visit(this);		
+	}
 
 }

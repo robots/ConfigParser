@@ -346,4 +346,14 @@ public class IniSectionImpl implements IniSection {
 		return opt;
 	}
 
+	@Override
+	public void accept(IniVisitor visitor) {
+		visitor.visit(this);
+		
+		for(IniOption opt : optionMap.values())
+		{
+			opt.accept(visitor);
+		}
+		
+	}
 }

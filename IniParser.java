@@ -62,6 +62,7 @@ public interface IniParser {
 	public void createEnumType(String enumName, String[] values);
 	public boolean isValidForEnum(String enumName, String value);
 	
+	public void accept (IniVisitor visitor);
 	
 
 }

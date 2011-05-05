@@ -430,4 +430,14 @@ public class IniParserImpl implements IniParser {
 		return getSection(sectionName).getOption(option);
 	}
 
+	@Override
+	public void accept(IniVisitor visitor) {
+		visitor.visit(this);
+		
+		for( IniSection section : sectionMap.values())
+		{
+			section.accept(visitor);
+		}
+		
+	}
 }
