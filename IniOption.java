@@ -5,16 +5,55 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Trida reprezentujici jednu volbu v .ini souboru
+ * @author Vladimir Fiklik, Michal Demin
+ *
+ */
 public class IniOption {
+	/**
+	 * Nazev volby
+	 */
 	private String name;
+	
+	/**
+	 * Urcuje, zda je volba seznamem (true), nebo ma pouze jedinou hodnotu (false)
+	 */
 	private boolean isList;
+	/**
+	 * Typ hodnot teto volby
+	 */
 	private OptionType type;
+	/**
+	 * Urcuje, zda je volba povinna
+	 */
 	private boolean mandatory;
+	/**
+	 * Seznam defaultnich hodnot (pokud je volba jednohodnotova, 
+	 * bere se pouze prvni prvek)
+	 */
 	private List<Element> defaultValueList;
+	/**
+	 * Seznam hodnot (pokud je volba jednohodnotova, 
+	 * bere se pouze prvni prvek)
+	 */
 	private List<Element> valueList;
+	/**
+	 * Nazev vyctoveho typu, k nemuz hodnota patri.
+	 * Pokud nepatri k zadnemu, null
+	 */
 	private String enumName;
+	/**
+	 * Oddelovac jednotlivych prvku seznamu hodnot
+	 */
 	private char delimiter;
 	
+	/**
+	 * Metoda pro inicializaci private promennych
+	 * @param name nazev volby
+	 * @param type typ volby
+	 * @param isList zda je volba seznamem hodnot
+	 */
 	private void init(String name, OptionType type, boolean isList )
 	{
 		this.name = name;
@@ -24,28 +63,57 @@ public class IniOption {
 		this.isList = isList;
 	}
 	
+	/**
+	 * 
+	 * @param name Nazev volby
+	 * @param type typ volby
+	 * @param isList zda je volba seznamem hodnot
+	 */
 	public IniOption(String name, OptionType type, boolean isList) {
 		init(name, type, isList);
 	}
 	
+	/**
+	 * 
+	 * @param name Nazev volby
+	 * @param type typ volby
+	 * @param isList zda je volba seznamem hodnot
+	 * @param mandatory zda je volba povinna
+	 */
 	public IniOption(String name, OptionType type, boolean isList, boolean mandatory) {
 		init(name, type, isList);
 		this.mandatory = mandatory;
 	}
 
+	/**
+	 * Test na povinnost volby
+	 * @return true, pokud je volba povinna, jinak false
+	 */
 	public boolean isMandatory() {
 		return mandatory;
 	}
 
+	/**
+	 * Nastaveni povinnosti volby
+	 * @param mandatory povinnost volby
+	 */
 	public void setMandatory(boolean mandatory) {
 		this.mandatory = mandatory;
 	}
 
+	/**
+	 * Nastaveni defaultni hodnoty
+	 * @param defaultValue defaultni hodnota
+	 */
 	public void setDefaultElement(Element defaultValue) {
 		this.defaultValueList.clear();
 		this.defaultValueList.add(defaultValue);
 	}
 
+	/**
+	 * Zjisteni defaultni hodnoty
+	 * @return defaultni hodnota
+	 */
 	public Element getDefaultElement() {
 		if (!this.isList)
 			return defaultValueList.get(0);
@@ -53,10 +121,18 @@ public class IniOption {
 		return null;
 	}
 	
+	/**
+	 * Nastaveni defaultni hodnoty pro list-volbu
+	 * @param defaultValues defaultni seznam hodnot
+	 */
 	public void setDefaultElementList(List<Element> defaultValues) {
 		this.defaultValueList = defaultValues;
 	}
-
+	
+	/**
+	 * Zjisteni defaultni hodnoty pro list-volbu
+	 * @return defaultni seznam hodnot
+	 */
 	public List<Element> getDefaultElementList() {
 		if(this.isList)
 			return this.defaultValueList;
@@ -64,6 +140,10 @@ public class IniOption {
 		return null;
 	}
 
+	/**
+	 * Zjisteni hodnoty volby
+	 * @return hodnota
+	 */
 	public Element getElement() {
 		if (!this.isList)
 			return valueList.get(0);
@@ -71,11 +151,19 @@ public class IniOption {
 		return null;
 	}
 
+	/**
+	 * Nastaveni hodnoty volby
+	 * @param value hodnota
+	 */
 	public void setElement(Element value) {
 		this.valueList.clear();
 		this.valueList.add(value);
 	}
 	
+	/**
+	 * Zjisteni seznamu hodnot list-volby
+	 * @return seznam hodnot, null v pripade jednohodnotove volby
+	 */
 	public List<Element> getElementList()
 	{
 		if(this.isList)
@@ -84,19 +172,35 @@ public class IniOption {
 		return null;
 	}
 	
+	/**
+	 * Nastaveni seznamu hodnot list-volby
+	 * @param values seznam hodnot
+	 */
 	public void setElementList(List<Element> values)
 	{
 		this.valueList = values;
 	}
 
+	/**
+	 * Nastveni nazvu vyctoveho typu, ke kteremu patri hodnoty volby
+	 * @param enumName nazev vyctoveho typu
+	 */
 	public void setEnumName(String enumName) {
 		this.enumName = enumName;
 	}
 
+	/**
+	 * Zjisteni nazvu vyctoveho typu, k nemuz patri hodnoty volby
+	 * @return nazev vyctoveho typu
+	 */
 	public String getEnumName() {
 		return enumName;
 	}
 
+	/**
+	 * Nastaveni oddelovace pro list-volbu
+	 * @param delimiter oddelovac. Pripustne hodnoty ',' a ':' 
+	 */
 	public void setDelimiter(char delimiter) {
 		this.delimiter = delimiter;
 	}
