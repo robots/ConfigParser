@@ -46,6 +46,12 @@ public interface IniSection {
 
 	public IniOption getOption(String option);
 	
+	public void setInlineComment(String inlineComment);
+	public String getInlineComment();
+	
+	public void setPriorComments(List<String> priorComments);
+	public List<String> getPriorComments();
+	
 	public void accept (IniVisitor visitor);
 	
 	/*

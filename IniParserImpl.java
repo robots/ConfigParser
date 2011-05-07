@@ -21,6 +21,12 @@ public class IniParserImpl implements IniParser {
 	
 	private Map<String, IniSection> sectionMap;
 	private Map<String, Set<String> > enumMap;
+	
+	/**
+	 * Seznam komentaru na konci ini souboru
+	 * Kazda radka je ulozena v samostatnem stringu
+	 */
+	private List<String> closingComments;
 
 	private static final char CHAR_BACKSLASH = '\\';
 	private static final char CHAR_SPACE = ' ';
@@ -640,5 +646,23 @@ System.out.println(" '" + value + "' ");
 			output += c;
 		}
 		return output;
+	}
+
+	/**
+	 * Nastaveni seznamu komentaru na konci ini souboru.
+	 * Kazda radka je ulozena v samostatnem stringu.
+	 * @param closingComments seznam komentaru na konci ini souboru
+	 */
+	public void setClosingComments(List<String> closingComments) {
+		this.closingComments = closingComments;
+	}
+
+	/**
+	 * Zjisteni seznamu komentaru na konci ini souboru.
+	 * Kazda radka je ulozena v samostatnem stringu.
+	 * @return seznam komentaru na konci ini souboru
+	 */
+	public List<String> getClosingComments() {
+		return closingComments;
 	}
 }

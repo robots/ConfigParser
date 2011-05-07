@@ -49,6 +49,18 @@ public class IniOption {
 	private char delimiter;
 	
 	/**
+	 * Komentar vztahujici se k volbe.
+	 * Jedna se o komentar uvedeny na stejnem radku jako volba.
+	 */
+	private String inlineComment;
+	
+	/**
+	 * Seznam komentaru predchazejicich volbe.
+	 * Kazda radka je ulozena v samostatnem stringu.
+	 */
+	private List<String> priorComments;
+	
+	/**
 	 * Metoda pro inicializaci private promennych
 	 * @param name nazev volby
 	 * @param type typ volby
@@ -208,10 +220,19 @@ public class IniOption {
 		this.delimiter = delimiter;
 	}
 
+	/**
+	 * Zjisteni oddelovace pro list-volbu
+	 * @return oddelovac
+	 */
 	public char getDelimiter() {
 		return delimiter;
 	}
 	
+	/**
+	 * Ziskani hodnoty z volby typu boolean
+	 * @return hodnota volby
+	 * @throws BadTypeException V pripade pouziti na nespravny typ
+	 */
 	public boolean getValueBool() throws BadTypeException {
 		if(this.type != OptionType.BOOLEAN)
 			throw new BadTypeException("Requested option is not of type Boolean");
@@ -423,5 +444,39 @@ public class IniOption {
 	public boolean isList()
 	{
 		return this.isList;
+	}
+
+	/**
+	 * Nastaveni radkoveho komentare k volbe
+	 * @param comment komentar
+	 */
+	public void setInlineComment(String inlineComment) {
+		this.inlineComment = inlineComment;
+	}
+
+	/**
+	 * Zjisteni komentare prislusejiciho volbe
+	 * @return
+	 */
+	public String getInlineComment() {
+		return inlineComment;
+	}
+
+	/**
+	 * Nastaveni seznamu komentaru predchazejicich volbe.
+	 * Kazda radka je ulozena v jednom stringu.
+	 * @param priorComments seznam komentaru predchazejicich volbe
+	 */
+	public void setPriorComments(List<String> priorComments) {
+		this.priorComments = priorComments;
+	}
+
+	/**
+	 * Zjisteni seznamu komentaru predchazejicich volbe.
+	 * Kazda radka je ulozena v jednom stringu.
+	 * @return seznam komentaru predchazejicich volbe
+	 */
+	public List<String> getPriorComments() {
+		return priorComments;
 	}
 }

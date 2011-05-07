@@ -9,6 +9,18 @@ public class IniSectionImpl implements IniSection {
 	private Map<String, IniOption> optionMap;
 	private String name;
 	private IniParser parser;
+	
+	/** 
+	 * Komentar vztahujici se k sekci.
+	 * Jedna se o komentar uvedeny na stejnem radku jako sekce.
+	 */
+	private String inlineComment;
+	
+	/**
+	 * Seznam komentaru predchazejicich sekci.
+	 * Kazda radka je ulozena v samostatnem sekci.
+	 */
+	private List<String> priorComments;
 
 	public IniSectionImpl(String name, IniParser parser) {
 		this.parser = parser;
@@ -356,6 +368,46 @@ public class IniSectionImpl implements IniSection {
 			opt.accept(visitor);
 		}
 		
+	}
+
+	/**
+	 * Nastaveni radkoveho komentare k sekci
+	 * @param comment radkovy komentar prislusejici sekci 
+	 */
+	@Override
+	public void setInlineComment(String inlineComment) {
+		this.inlineComment = inlineComment;
+		
+	}
+
+	/**
+	 * Zjisteni radkoveho komentare k sekci
+	 * @return radkovy komentar prislusejici sekci 
+	 */
+	@Override
+	public String getInlineComment() {
+		return this.inlineComment;
+	}
+
+	/**
+	 * Nastaveni seznamu komentaru predchazejicich sekci.
+	 * Kazda radka je ulozena v jednom stringu.
+	 * @param priorComments seznam komentaru predchazejicich sekci
+	 */
+	@Override
+	public void setPriorComments(List<String> priorComments) {
+		this.priorComments = priorComments;
+		
+	}
+
+	/**
+	 * Zjisteni seznamu komentaru predchazejicich sekci.
+	 * Kazda radka je ulozena v jednom stringu.
+	 * @return seznam komentaru predchazejicich sekci
+	 */
+	@Override
+	public List<String> getPriorComments() {
+		return this.priorComments;
 	}
 
 }
