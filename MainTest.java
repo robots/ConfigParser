@@ -57,6 +57,20 @@ public class MainTest {
 		iniP.accept(visitor);
 		iniP.accept(sv);
 
+		try {
+			iniP.readFile("test.ini");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		iniP.accept(visitor);
+
+		try {
+			iniP.writeFile("output.ini");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		System.out.print(sv.getString());
 	}
 

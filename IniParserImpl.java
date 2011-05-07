@@ -1,6 +1,12 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +27,8 @@ public class IniParserImpl implements IniParser {
 	private static final char DELIM_COMENT = ';';
 	private static final char DELIM_OPTION = '=';
 
-	private static IniSection parsedSection = null;
+	private IniSection parsedSection = null;
+	private ParserAttitude parserAttitude = ParserAttitude.UNDEF;
 
 	public static final String PATTERN_ID = "[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*";
 	public static final String PATTERN_ID_STRICT = "^[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*$";
@@ -33,6 +40,13 @@ public class IniParserImpl implements IniParser {
 	{
 		sectionMap = new HashMap<String, IniSection>();
 		enumMap = new HashMap<String, Set<String>> ();
+
+		parserAttitude = ParserAttitude.STRICT;
+	}
+
+	@Override
+	public void setAttitude(ParserAttitude attitude) {
+		this.parserAttitude = attitude;
 	}
 
 	@Override
@@ -406,38 +420,75 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public void readFile(String fileName) throws IOException {
-		// TODO Auto-generated method stub
+		File file = new File(fileName);
+		FileInputStream fs = new FileInputStream(file);
 
+		this.readStream(fs);
+		fs.close();
 	}
 
 	@Override
-	public void readStream(InputStream inStream) {
-		// TODO Auto-generated method stub
+	public void readStream(InputStream inStream) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
+		StringBuilder sb = new StringBuilder();
+		String line = null;
 
+		while ((line = br.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+
+		this.readString(sb.toString());
 	}
 
 	@Override
 	public void readString(String inString) {
-		// TODO Auto-generated method stub
+		BufferedReader reader = new BufferedReader(new StringReader(inString));
+        
+		try {
+			String line;
+			int linenum = 0;
+			while ((line = reader.readLine()) != null) {
+				linenum ++;
+
+				if (line.length() == 0) {
+					continue;
+				}
+
+				boolean ret = parseLine(line);
+				if (ret == false) {
+					if (this.parserAttitude == ParserAttitude.STRICT) {
+						System.out.println("Fatal error on line " + linenum);
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	@Override
 	public void writeFile(String fileName) throws IOException {
-		// TODO Auto-generated method stub
+		File file = new File(fileName);
+		FileOutputStream fs = new FileOutputStream(file);
 
+		this.writeStream(fs);
+		fs.close();
 	}
 
 	@Override
-	public void writeStream(OutputStream outStream) {
-		// TODO Auto-generated method stub
-
+	public void writeStream(OutputStream outStream) throws IOException {
+		String data = this.writeString();
+		outStream.write(data.getBytes());
 	}
 
 	@Override
 	public String writeString() {
-		// TODO Auto-generated method stub
-		return null;
+		StringVisitor sv = new StringVisitor();
+		this.accept(sv);
+
+		return sv.getString();
 	}
 
 	private void parseReset() {
@@ -542,8 +593,8 @@ System.out.print("Option '" + optionID + "' = ");
 
 		if (iniOpt.isList() == false) {
 			Element elem = new Element(optionValue);
-			iniOpt.setElement(elem);
 System.out.println(" '" + optionValue + "' ");
+			iniOpt.setElement(elem);
 		} else {
 			String delim = Character.toString(iniOpt.getDelimiter());
 			String[] values = optionValue.split(delim);
@@ -553,8 +604,8 @@ System.out.println(" '" + optionValue + "' ");
 			for (String value : values) {
 				Element elem = new Element(value);
 
-				listElem.add(elem);
 System.out.println(" '" + value + "' ");
+				listElem.add(elem);
 			}
 
 			iniOpt.setElementList(listElem);

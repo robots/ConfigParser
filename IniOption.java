@@ -156,6 +156,9 @@ public class IniOption {
 	 * @param value hodnota
 	 */
 	public void setElement(Element value) {
+		if (this.valueList == null) {
+			this.valueList = new LinkedList<Element>();
+		}
 		this.valueList.clear();
 		this.valueList.add(value);
 	}
