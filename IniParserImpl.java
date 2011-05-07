@@ -127,24 +127,6 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void readFile(String fileName) throws IOException {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void readStream(InputStream inStream) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void readString(String inString) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void setBoolean(String sectionName, String option, boolean value) {
 	
 		IniOption opt = this.getOption(sectionName, option);
@@ -414,6 +396,39 @@ public class IniParserImpl implements IniParser {
 		opt.setValue(value);
 	}
 
+	protected IniOption getOption(String sectionName, String option)
+	{
+		return getSection(sectionName).getOption(option);
+	}
+
+	@Override
+	public void accept(IniVisitor visitor) {
+		visitor.visit(this);
+
+		for( IniSection section : sectionMap.values())
+		{
+			section.accept(visitor);
+		}
+	}
+
+	@Override
+	public void readFile(String fileName) throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void readStream(InputStream inStream) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void readString(String inString) {
+		// TODO Auto-generated method stub
+
+	}
+
 	@Override
 	public void writeFile(String fileName) throws IOException {
 		// TODO Auto-generated method stub
@@ -431,21 +446,4 @@ public class IniParserImpl implements IniParser {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	protected IniOption getOption(String sectionName, String option)
-	{
-		return getSection(sectionName).getOption(option);
-	}
-
-	@Override
-	public void accept(IniVisitor visitor) {
-		visitor.visit(this);
-		
-		for( IniSection section : sectionMap.values())
-		{
-			section.accept(visitor);
-		}
-		
-	}
-
 }
