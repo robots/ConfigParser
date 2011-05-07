@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.LinkedList;
 
 public class IniParserImpl implements IniParser {
 	
-	private Map<String, IniSection> sectionMap;
+	private List<IniSection> sectionList;
 	private Map<String, Set<String> > enumMap;
 	
 	/**
@@ -44,7 +45,7 @@ public class IniParserImpl implements IniParser {
 	
 	public IniParserImpl()
 	{
-		sectionMap = new HashMap<String, IniSection>();
+		sectionList = new LinkedList<IniSection>();
 		enumMap = new HashMap<String, Set<String>> ();
 
 		parserAttitude = ParserAttitude.STRICT;
@@ -58,7 +59,7 @@ public class IniParserImpl implements IniParser {
 	@Override
 	public IniSection addSection(String sectionName) {
 		IniSection section = new IniSectionImpl(sectionName, this);
-		sectionMap.put(sectionName, section);
+		sectionList.add(section);
 
 		return section;
 	}
@@ -76,7 +77,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public boolean getBoolean(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueBool();
@@ -85,7 +86,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public String getEnum(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueEnum();
@@ -93,7 +94,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public float getFloat(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueFloat();
@@ -105,7 +106,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	protected IniSection getSection(String sectionName, boolean autoCreate) {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 
 		if(autoCreate && (section == null))
 			section = addSection(sectionName);
@@ -115,7 +116,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public BigInteger getSigned(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueSigned();
@@ -123,7 +124,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public String getString(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueString();
@@ -131,7 +132,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueUnsigned();
@@ -139,7 +140,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public String getUntyped(String sectionName, String option) throws BadTypeException {
-		IniSection section = sectionMap.get(sectionName);
+		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
 		return opt.getValueUntyped();
@@ -418,7 +419,7 @@ public class IniParserImpl implements IniParser {
 	public void accept(IniVisitor visitor) {
 		visitor.visit(this);
 
-		for( IniSection section : sectionMap.values())
+		for( IniSection section : sectionList)
 		{
 			section.accept(visitor);
 		}
@@ -664,5 +665,22 @@ System.out.println(" '" + value + "' ");
 	 */
 	public List<String> getClosingComments() {
 		return closingComments;
+	}
+	
+	/**
+	 * Najde sekci podle zadaneho jmena sekce
+	 * @param sectionName jmeno hledane sekce
+	 * @return hledana sekce, nebo null pokud takova sekce neexistuje
+	 */
+	private IniSection findSection(String sectionName)
+	{
+		
+		for(IniSection section : sectionList)
+		{
+			if(section.getName().equals(sectionName))
+				return section;
+		}
+		
+		return null;
 	}
 }
