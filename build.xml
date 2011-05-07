@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ConfigParser" default="build" basedir=".">
 
+	<property name="docdir" location="documentation" />
+
 	<path id="classpath">
 		<pathelement path="${basedir}/bin"/>
 	</path>
@@ -23,6 +25,11 @@
 
 	<target name="clean" description="Clean ConfigParser">
 		<delete dir="${basedir}/bin/"/>
+	</target>
+
+	<target name="doc" description="dokumentace">
+		<mkdir dir="${docdir}"/>
+		<javadoc sourcefiles="${basedir}/*.java" destdir="${docdir}"/>
 	</target>
 
 </project>
