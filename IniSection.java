@@ -24,7 +24,7 @@ public interface IniSection {
 	public IniOption defineOptUnsigned(String option, BigInteger defaultValue);
 	
 	public IniOption defineOptEnum(String option, String enumName);
-	public IniOption defineOptEnum(String option, String enumName, String defaultValue) throws Exception;
+	public IniOption defineOptEnum(String option, String enumName, String defaultValue) throws BadValueException, IniAccessException;
 
 	public IniOption defineOptListString(String option, char delimiter);
 	public IniOption defineOptListString(String option, char delimiter, List<String> defaultValue);
@@ -42,7 +42,7 @@ public interface IniSection {
 	public IniOption defineOptListUnsigned(String option, char delimiter, List<BigInteger> defaultValue);
 	
 	public IniOption defineOptListEnum(String option, String enumName, char delimiter);
-	public IniOption defineOptListEnum(String option, String enumName, char delimiter, List<String> defaultValue) throws Exception;
+	public IniOption defineOptListEnum(String option, String enumName, char delimiter, List<String> defaultValue) throws BadValueException, IniAccessException;
 
 	public IniOption getOption(String option);
 	

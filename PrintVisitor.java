@@ -67,7 +67,7 @@ public class PrintVisitor implements IniVisitor {
 			System.out.println("Option: " + option.getName() + " Value: " + value + " Type: " + option.getType());			
 		
 		}
-		catch(BadTypeException e)
+		catch(IniException e)
 		{
 			System.out.println(e.toString());
 		}
@@ -114,7 +114,7 @@ public class PrintVisitor implements IniVisitor {
 			System.out.println("Option: " + option.getName() + " Value: " + value + " Type: " + option.getType());			
 		
 		}
-		catch(BadTypeException e)
+		catch(IniException e)
 		{
 			System.out.println(e.toString());
 		}

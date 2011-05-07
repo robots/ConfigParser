@@ -42,7 +42,12 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(Boolean.toString(defaultValue));
-		opt.setDefaultElement(defVal);
+		try {
+			opt.setDefaultElement(defVal);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -59,11 +64,11 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptEnum(String option, String enumName,
-			String defaultValue) throws Exception {
+			String defaultValue) throws BadValueException, IniAccessException {
 		IniOption opt = new IniOption(option, OptionType.ENUM, false);
 		
 		if (! parser.isValidForEnum(enumName, defaultValue))
-			throw new Exception("Invalid value");
+			throw new BadValueException("Invalid value");
 		
 		Element defVal = new Element();
 		defVal.setValue(defaultValue);
@@ -90,7 +95,12 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(Float.toString(defaultValue));
-		opt.setDefaultElement(defVal);
+		try {
+			opt.setDefaultElement(defVal);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -110,7 +120,12 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
-		opt.setDefaultElement(defVal);
+		try {
+			opt.setDefaultElement(defVal);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -130,7 +145,12 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue);
-		opt.setDefaultElement(defVal);
+		try {
+			opt.setDefaultElement(defVal);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -150,7 +170,12 @@ public class IniSectionImpl implements IniSection {
 		Element defVal = new Element();
 
 		defVal.setValue(defaultValue.toString());
-		opt.setDefaultElement(defVal);
+		try {
+			opt.setDefaultElement(defVal);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -167,7 +192,12 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListBoolean(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.BOOLEAN, true, true);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -179,7 +209,8 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.BOOLEAN, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
 		
 		for (Boolean boolVal : defaultValue) {
 			Element element = new Element();
@@ -189,6 +220,11 @@ public class IniSectionImpl implements IniSection {
 
 		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
+		
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 
 		return opt;
 	}
@@ -199,7 +235,12 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.ENUM, true, true);
 		opt.setEnumName(enumName);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		
 		optionList.add(opt);
 
@@ -208,7 +249,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListEnum(String option, String enumName,
-		char delimiter, List<String> defaultValue) throws Exception{
+		char delimiter, List<String> defaultValue) throws BadValueException, IniAccessException{
 		
 		IniOption opt = new IniOption(option, OptionType.ENUM, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
@@ -218,7 +259,7 @@ public class IniSectionImpl implements IniSection {
 			Element element = new Element();
 			
 			if(! parser.isValidForEnum(enumName, strVal))
-				throw new Exception("Invalid Value");
+				throw new BadValueException("Invalid Value");
 			
 			element.setValue(strVal);
 			defaultValues.add(element);
@@ -234,7 +275,12 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListFloat(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.FLOAT, true, true);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -246,6 +292,7 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.FLOAT, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
+		try {
 		opt.setDelimiter(delimiter);
 
 		for (Float floatVal : defaultValue) {
@@ -256,6 +303,10 @@ public class IniSectionImpl implements IniSection {
 
 		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 
 		return opt;
 	}
@@ -263,7 +314,12 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListSigned(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.SIGNED, true, true);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -275,15 +331,20 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.SIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
 
-		for (BigInteger signedVal : defaultValue) {
-			Element element = new Element();
-			element.setValue(signedVal.toString());
-			defaultValues.add(element);
+			for (BigInteger signedVal : defaultValue) {
+				Element element = new Element();
+				element.setValue(signedVal.toString());
+				defaultValues.add(element);
+			}
+	
+			opt.setDefaultElementList(defaultValues);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
 		}
-
-		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
 
 		return opt;
@@ -292,7 +353,12 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListString(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.STRING, true, true);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -304,15 +370,20 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.STRING, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
-		opt.setDelimiter(delimiter);
-
-		for (String strVal : defaultValue) {
-			Element element = new Element();
-			element.setValue(strVal);
-			defaultValues.add(element);
+		try {
+			opt.setDelimiter(delimiter);
+	
+			for (String strVal : defaultValue) {
+				Element element = new Element();
+				element.setValue(strVal);
+				defaultValues.add(element);
+			}
+	
+			opt.setDefaultElementList(defaultValues);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
 		}
-
-		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
 
 		return opt;
@@ -321,7 +392,12 @@ public class IniSectionImpl implements IniSection {
 	@Override
 	public IniOption defineOptListUnsigned(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.UNSIGNED, true, true);
-		opt.setDelimiter(delimiter);
+		try {
+			opt.setDelimiter(delimiter);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
+		}
 		optionList.add(opt);
 
 		return opt;
@@ -333,15 +409,20 @@ public class IniSectionImpl implements IniSection {
 		
 		IniOption opt = new IniOption(option, OptionType.UNSIGNED, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
-		opt.setDelimiter(delimiter);
-
-		for (BigInteger unsignedVal : defaultValue) {
-			Element element = new Element();
-			element.setValue(unsignedVal.toString());
-			defaultValues.add(element);
+		try {
+			opt.setDelimiter(delimiter);
+	
+			for (BigInteger unsignedVal : defaultValue) {
+				Element element = new Element();
+				element.setValue(unsignedVal.toString());
+				defaultValues.add(element);
+			}
+	
+			opt.setDefaultElementList(defaultValues);
+		} 
+		catch(IniException e) {
+			System.err.println(e.toString());
 		}
-
-		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
 
 		return opt;

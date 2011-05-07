@@ -117,7 +117,10 @@ public class IniOption {
 	 * Nastaveni defaultni hodnoty
 	 * @param defaultValue defaultni hodnota
 	 */
-	public void setDefaultElement(Element defaultValue) {
+	public void setDefaultElement(Element defaultValue) throws IniAccessException {
+		if(this.isList())
+			throw new IniAccessException("Setting single value to list-type option");
+		
 		this.defaultValueList.clear();
 		this.defaultValueList.add(defaultValue);
 	}
@@ -126,18 +129,21 @@ public class IniOption {
 	 * Zjisteni defaultni hodnoty
 	 * @return defaultni hodnota
 	 */
-	public Element getDefaultElement() {
-		if (!this.isList)
-			return defaultValueList.get(0);
+	public Element getDefaultElement() throws IniAccessException {
+		if (this.isList())
+			throw new IniAccessException("List option accessed as single-value option");
 		
-		return null;
+		return defaultValueList.get(0);
 	}
 	
 	/**
 	 * Nastaveni defaultni hodnoty pro list-volbu
 	 * @param defaultValues defaultni seznam hodnot
 	 */
-	public void setDefaultElementList(List<Element> defaultValues) {
+	public void setDefaultElementList(List<Element> defaultValues) throws IniAccessException {
+		if(! this.isList())
+			throw new IniAccessException("Single-value option accessed as list option");
+		
 		this.defaultValueList = defaultValues;
 	}
 	
@@ -145,32 +151,36 @@ public class IniOption {
 	 * Zjisteni defaultni hodnoty pro list-volbu
 	 * @return defaultni seznam hodnot
 	 */
-	public List<Element> getDefaultElementList() {
-		if(this.isList)
-			return this.defaultValueList;
+	public List<Element> getDefaultElementList() throws IniAccessException {
+		if(! this.isList())
+			throw new IniAccessException("List option accessed as single-value option.");
 		
-		return null;
+		return this.defaultValueList;
 	}
 
 	/**
 	 * Zjisteni hodnoty volby
 	 * @return hodnota
 	 */
-	public Element getElement() {
-		if (!this.isList)
-			return valueList.get(0);
+	public Element getElement() throws IniAccessException{
+		if (this.isList())
+			throw new IniAccessException("Single-value option accessed as list option.");
 
-		return null;
+		return valueList.get(0);
 	}
 
 	/**
 	 * Nastaveni hodnoty volby
 	 * @param value hodnota
 	 */
-	public void setElement(Element value) {
+	public void setElement(Element value) throws IniAccessException {
+		if(this.isList())
+			throw new IniAccessException("List option accessed as single-value option.");
+				
 		if (this.valueList == null) {
 			this.valueList = new LinkedList<Element>();
 		}
+		
 		this.valueList.clear();
 		this.valueList.add(value);
 	}
@@ -179,20 +189,21 @@ public class IniOption {
 	 * Zjisteni seznamu hodnot list-volby
 	 * @return seznam hodnot, null v pripade jednohodnotove volby
 	 */
-	public List<Element> getElementList()
-	{
-		if(this.isList)
-			return this.valueList;
+	public List<Element> getElementList() throws IniAccessException	{
+		if(!this.isList())
+			throw new IniAccessException("Single-value option accessed as list option.");
 		
-		return null;
+		return this.valueList;
 	}
 	
 	/**
 	 * Nastaveni seznamu hodnot list-volby
 	 * @param values seznam hodnot
 	 */
-	public void setElementList(List<Element> values)
-	{
+	public void setElementList(List<Element> values) throws IniAccessException {
+		if(!this.isList())
+			throw new IniAccessException("Single-value option accessed as list option.");
+		
 		this.valueList = values;
 	}
 
@@ -216,7 +227,13 @@ public class IniOption {
 	 * Nastaveni oddelovace pro list-volbu
 	 * @param delimiter oddelovac. Pripustne hodnoty ',' a ':' 
 	 */
-	public void setDelimiter(char delimiter) {
+	public void setDelimiter(char delimiter) throws IniAccessException, BadValueException {
+		if(! this.isList())
+			throw new IniAccessException("Setting delimiter for single-valued option.");
+		
+		if((delimiter != ':') && (delimiter != ','))
+			throw new BadValueException("Invalid value for delimiter: \"" + delimiter +" \"");
+		
 		this.delimiter = delimiter;
 	}
 
@@ -224,7 +241,10 @@ public class IniOption {
 	 * Zjisteni oddelovace pro list-volbu
 	 * @return oddelovac
 	 */
-	public char getDelimiter() {
+	public char getDelimiter() throws IniAccessException {
+		if(!this.isList())
+			throw new IniAccessException("Getting delimiter from single-valued option.");
+		
 		return delimiter;
 	}
 	
@@ -233,53 +253,53 @@ public class IniOption {
 	 * @return hodnota volby
 	 * @throws BadTypeException V pripade pouziti na nespravny typ
 	 */
-	public boolean getValueBool() throws BadTypeException {
+	public boolean getValueBool() throws IniException {
 		if(this.type != OptionType.BOOLEAN)
 			throw new BadTypeException("Requested option is not of type Boolean");
 		
 		return Boolean.parseBoolean(this.getValue());
 	}
 	
-	public BigInteger getValueSigned() throws BadTypeException {
+	public BigInteger getValueSigned() throws IniException {
 		if(this.type != OptionType.SIGNED)
 			throw new BadTypeException("Requested option is not of type Signed");
 		
 		return new BigInteger(this.getValue());
 	}
 	
-	public BigInteger getValueUnsigned() throws BadTypeException {		
+	public BigInteger getValueUnsigned() throws IniException {		
 		if(this.type != OptionType.UNSIGNED)
 			throw new BadTypeException("Requested option is not of type Unsigned");
 		
 		return new BigInteger(this.getValue());
 	}
 	
-	public float getValueFloat() throws BadTypeException {
+	public float getValueFloat() throws IniException {
 		if(this.type != OptionType.FLOAT)
 			throw new BadTypeException("Requested option is not of type Float");
 		
 		return Float.parseFloat(this.getValue());
 	}
 	
-	public String getValueEnum() throws BadTypeException {
+	public String getValueEnum() throws IniException {
 		if(this.type != OptionType.ENUM)
 			throw new BadTypeException("Requested option is not of type Enum");
 		
 		return this.getValue();
 	}
 	
-	public String getValueString() throws BadTypeException {
+	public String getValueString() throws IniException {
 		if(this.type != OptionType.STRING)
 			throw new BadTypeException("Requested option is not of type String");
 		
 		return this.getValue();
 	}
 	
-	public String getValueUntyped() throws BadTypeException {
+	public String getValueUntyped() throws IniException {
 		return getValue();
 	}
 	
-	public List<Boolean> getValueListBool() throws BadTypeException {
+	public List<Boolean> getValueListBool() throws IniException {
 		
 		if(this.type != OptionType.BOOLEAN)
 			throw new BadTypeException("Requested option is not of type Boolean");
@@ -296,7 +316,7 @@ public class IniOption {
 		
 	}
 
-	public List<String> getValueListString() throws BadTypeException {
+	public List<String> getValueListString() throws IniException {
 		
 		if(this.type != OptionType.STRING)
 			throw new BadTypeException("Requested option is not of type String");
@@ -313,7 +333,7 @@ public class IniOption {
 		
 	}
 
-	public List<Float> getValueListFloat() throws BadTypeException {
+	public List<Float> getValueListFloat() throws IniException {
 		
 		if(this.type != OptionType.FLOAT)
 			throw new BadTypeException("Requested option is not of type Float");
@@ -330,7 +350,7 @@ public class IniOption {
 		
 	}
 
-	public List<BigInteger> getValueListSigned() throws BadTypeException {
+	public List<BigInteger> getValueListSigned() throws IniException {
 		
 		if(this.type != OptionType.SIGNED)
 			throw new BadTypeException("Requested option is not of type Signed");
@@ -347,7 +367,7 @@ public class IniOption {
 		
 	}
 	
-	public List<BigInteger> getValueListUnsigned() throws BadTypeException {
+	public List<BigInteger> getValueListUnsigned() throws IniException {
 		
 		if(this.type != OptionType.UNSIGNED)
 			throw new BadTypeException("Requested option is not of type Unsigned");
@@ -364,7 +384,7 @@ public class IniOption {
 		
 	}
 	
-	public List<String> getValueListEnum() throws BadTypeException {
+	public List<String> getValueListEnum() throws IniException {
 		
 		if(this.type != OptionType.ENUM)
 			throw new BadTypeException("Requested option is not of type Enum");
@@ -381,21 +401,41 @@ public class IniOption {
 		
 	}
 	
-	public void setValue(String value) {
+	public void setValue(String value) throws IniException {
+		
+		if((getType() != OptionType.STRING ) && (getType() != OptionType.ENUM) )
+			throw new BadTypeException("Assigning string value to " + getType() + " option");
+		
+		setValueUntyped(value);
+	}
+	
+	public void setValue(BigInteger value) throws IniException {
+		if((getType() != OptionType.SIGNED ) && (getType() != OptionType.UNSIGNED) )
+			throw new BadTypeException("Assigning integer value to " + getType() + " option");
+		
+		this.setValueUntyped(value.toString());
+	}
+	
+	public void setValue(float value) throws IniException {
+		if(this.getType() != OptionType.FLOAT)
+			throw new BadTypeException("Assigning float value to " + getType() + " option");
+		
+		this.setValueUntyped(Float.toString(value));
+	}
+	
+	public void setValue(boolean value)	throws IniException {
+		if(this.getType() != OptionType.BOOLEAN)
+			throw new BadTypeException("Assigning boolean value to " + getType() + " option");
+		
+		this.setValueUntyped(Boolean.toString(value));
+	}
+	
+	protected void setValueUntyped(String value) throws IniAccessException {
+		if(this.isList())
+			throw new IniAccessException("Setting single value to list-type option");
+		
 		this.valueList.clear();
 		this.valueList.add(new Element(value));
-	}
-	
-	public void setValue( BigInteger value) {
-		this.setValue(value.toString());
-	}
-	
-	public void setValue(float value) {
-		this.setValue(Float.toString(value));
-	}
-	
-	public void setValue(boolean value)	{
-		this.setValue(Boolean.toString(value));
 	}
 	
 	public void accept(IniVisitor visitor){
@@ -410,10 +450,10 @@ public class IniOption {
 		return this.type;
 	}
 	
-	public String getValue() throws BadTypeException
+	public String getValue() throws IniAccessException
 	{
 		if(this.isList())
-			throw new BadTypeException("List option accessed as single-value option");
+			throw new IniAccessException("List option accessed as single-value option");
 		
 		List<Element> listVal = valueList;
 		
@@ -427,10 +467,10 @@ public class IniOption {
 		
 	}
 
-	public List<Element> getValueList() throws BadTypeException {
+	public List<Element> getValueList() throws IniAccessException {
 		
 		if( ! this.isList())
-			throw new BadTypeException("Single-value option accessed as list option");
+			throw new IniAccessException("Single-value option accessed as list option");
 		
 		List<Element> listVal = valueList;
 		

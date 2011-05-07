@@ -76,7 +76,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public boolean getBoolean(String sectionName, String option) throws BadTypeException {
+	public boolean getBoolean(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -85,7 +85,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getEnum(String sectionName, String option) throws BadTypeException {
+	public String getEnum(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -93,7 +93,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public float getFloat(String sectionName, String option) throws BadTypeException {
+	public float getFloat(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -115,7 +115,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public BigInteger getSigned(String sectionName, String option) throws BadTypeException {
+	public BigInteger getSigned(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -123,7 +123,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getString(String sectionName, String option) throws BadTypeException {
+	public String getString(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -131,7 +131,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException {
+	public BigInteger getUnsigned(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -139,7 +139,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getUntyped(String sectionName, String option) throws BadTypeException {
+	public String getUntyped(String sectionName, String option) throws IniException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -160,7 +160,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setBoolean(String sectionName, String option, boolean value) {
+	public void setBoolean(String sectionName, String option, boolean value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 
 		opt.setValue(value);
@@ -262,7 +262,7 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public IniOption defineOptEnum(String sectionName, String option,
-			String enumName, String defaultValue) throws Exception {
+			String enumName, String defaultValue) throws BadValueException, IniAccessException {
 		IniSection section = getSection(sectionName, true);
 		IniOption opt = section.defineOptEnum(option, enumName, defaultValue);
 
@@ -371,7 +371,7 @@ public class IniParserImpl implements IniParser {
 	@Override
 	public IniOption defineOptListEnum(String sectionName, String option,
 			String enumName, char delimiter, List<String> defaultValue)
-			throws Exception {
+			throws BadValueException, IniAccessException {
 		IniSection section = getSection(sectionName, true);
 		IniOption opt = section.defineOptListEnum(option, enumName, delimiter, defaultValue);
 
@@ -379,7 +379,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setEnum(String sectionName, String option, String enumName, String value) {
+	public void setEnum(String sectionName, String option, String enumName, String value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 
 		opt.setValue(value);
@@ -387,25 +387,25 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setFloat(String sectionName, String option, float value) {
+	public void setFloat(String sectionName, String option, float value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setSigned(String sectionName, String option, BigInteger value) {
+	public void setSigned(String sectionName, String option, BigInteger value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setString(String sectionName, String option, String value) {
+	public void setString(String sectionName, String option, String value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setUnsigned(String sectionName, String option, BigInteger value) {
+	public void setUnsigned(String sectionName, String option, BigInteger value) throws IniException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
@@ -590,7 +590,7 @@ System.out.println(" Sekcia '" + sectionID + "'");
 			return false;
 		}
 
-System.out.print("Option '" + optionID + "' = ");
+		System.out.print("Option '" + optionID + "' = ");
 		IniOption iniOpt = parsedSection.getOption(optionID);
 
 		if (iniOpt == null) {
@@ -600,10 +600,17 @@ System.out.print("Option '" + optionID + "' = ");
 
 		if (iniOpt.isList() == false) {
 			Element elem = new Element(optionValue);
-System.out.println(" '" + optionValue + "' ");
+			System.out.println(" '" + optionValue + "' ");
+			try {
 			iniOpt.setElement(elem);
+			} 
+			catch(IniException e) {
+				System.err.println(e.toString());
+			}
 		} else {
+			try {
 			String delim = Character.toString(iniOpt.getDelimiter());
+			
 			String[] values = optionValue.split(delim);
 
 			LinkedList<Element> listElem = new LinkedList<Element>();
@@ -616,6 +623,10 @@ System.out.println(" '" + value + "' ");
 			}
 
 			iniOpt.setElementList(listElem);
+			} 
+			catch(IniException e) {
+				System.err.println(e.toString());
+			}
 		}
 		return true;
 	}
