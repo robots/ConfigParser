@@ -386,7 +386,7 @@ public class IniOption {
 		return this.type;
 	}
 	
-	private String getValue() throws BadTypeException
+	public String getValue() throws BadTypeException
 	{
 		if(this.isList())
 			throw new BadTypeException("List option accessed as single-value option");
@@ -403,7 +403,7 @@ public class IniOption {
 		
 	}
 
-	private List<Element> getValueList() throws BadTypeException {
+	public List<Element> getValueList() throws BadTypeException {
 		
 		if( ! this.isList())
 			throw new BadTypeException("Single-value option accessed as list option");
