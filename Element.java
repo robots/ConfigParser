@@ -1,3 +1,4 @@
+import java.util.regex.*;
 
 /**
  * Trida reprezentujici jednu hodnotu volby v .ini souboru
@@ -28,8 +29,15 @@ public class Element {
 	 * @return true, pokud je hodnota referencovana, false jinak
 	 */
 	public boolean isReference() {
-		// TODO: regexp  "${[^#]*#[^}]*}
-		
+		Pattern p = Pattern.compile(IniParserImpl.PATTERN_REFER);
+		Matcher m = p.matcher(this.value);
+
+		if (m.find()) {
+			System.err.println(" ehe ");
+			return true;
+		}
+
+		System.err.println(" ee ");
 		return false;
 	}
 
