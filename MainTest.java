@@ -47,13 +47,17 @@ public class MainTest {
 		section.defineOptListString("defListString", ',', listEnum);
 		section.defineOptListUnsigned("defListUnsigned", ':', listBig);
 		section.defineOptSigned("defSigned", new BigInteger("-15"));
-		section.defineOptString("defString", "Ahoj");
+		section.defineOptString("defString", "Ah oj");
 		section.defineOptUnsigned("defUnsigned", new BigInteger("20"));
 		
 		System.out.println("Default section created");
 		
 		IniVisitor visitor = new PrintVisitor();
+		StringVisitor sv = new StringVisitor();
 		iniP.accept(visitor);
+		iniP.accept(sv);
+
+		System.out.print(sv.getString());
 	}
 
 }
