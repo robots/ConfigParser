@@ -520,29 +520,23 @@ public class IniParserImpl implements IniParser {
 	public void readString(String inString) {
 		BufferedReader reader = new BufferedReader(new StringReader(inString));
         
-		boolean fail = true;
+		boolean success = true;
 		try {
 			String line;
 			int linenum = 0;
 			while ((line = reader.readLine()) != null) {
 				linenum ++;
 
-				if (line.length() == 0) {
-					continue;
-				}
-
-				fail = parseLine(line);
-				if (fail == false) {
-					if (this.parserAttitude == ParserAttitude.STRICT) {
-						System.out.println("Fatal error on line " + linenum);
-						break;
-					}
+				success = parseLine(line);
+				if (success == false) {
+					System.out.println("Fatal error on line " + linenum);
+					break;
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			parseFinish(fail);
+			parseFinish();
 		}
 
 	}
@@ -570,16 +564,26 @@ public class IniParserImpl implements IniParser {
 		return sv.getString();
 	}
 
-	private void parseFinish(boolean fail) {
-			this.setClosingComments(parsedCommentsList);
-
+	/**
+	 * Uprace po parseri.
+	 *
+	 */
+	private void parseFinish() {
+		this.setClosingComments(parsedCommentsList);
 
 		parsedSection = null;
 		parsedCommentsList = null;
 		parsedInlineComment = "";
 	}
 
-	private void parseAddComment(String comment) {
+	/**
+	 * Ulozi komentar do zoznamu komentarov.
+	 *
+	 * Tie sa neskor priradia k nejakej sekcii/volbe.
+	 *
+	 * @param comment Obsah komentaru
+	 */
+	private void parseSaveComment(String comment) {
 		if ((comment == null) || (comment.length() == 0)) {
 			return;
 		}
@@ -588,54 +592,58 @@ public class IniParserImpl implements IniParser {
 			parsedCommentsList = new LinkedList<String>();
 		}
 
-		System.out.println("Adding to list '" + comment + "'");
 		parsedCommentsList.add(comment);
 	}
 
+	/**
+	 * Sparsuje riadok. Rozhozne ci je na riadku sekcia, 
+	 * alebo volba s hodnotou, popripade iba komentar.
+	 *
+	 * @param input Obsah riadku
+	 * @return vysledok parsovania - true/false
+	 */
 	private boolean parseLine(String input) {
 		String strComment = new String("");
 
-		int idxComent = input.indexOf(';');
+		int idxComent = input.indexOf(DELIM_COMENT);
 		if (idxComent != -1) {
 			strComment = input.substring(idxComent + 1).trim();
 
-			if (idxComent == 0) {
-				// only comment on line
-				parseAddComment(strComment);
-				return true;
+			if (idxComent != 0) {
+				input = input.substring(0, idxComent - 1);
+			} else {
+				input = "";
 			}
-
-			input = input.substring(0, idxComent - 1);
 		}
 
-		input = trim_special(input);
-
-		if (input.length() == 0) {
-			if (strComment.length() != 0) {
-				// only comment
-				parseAddComment(strComment);
-				return true;
-			}
-			return false;
-		}
+		input = trimSpacesSpecial(input);
 
 		parsedInlineComment = strComment;
 
-		Pattern patSection = Pattern.compile(Patterns.PATTERN_SECTION);
+		Pattern patSection = Pattern.compile(Patterns.PATTERN_SECTION_STRICT);
 		Matcher matSection = patSection.matcher(input);
 
-		boolean fail = false;
-		if (matSection.find()) {
+		boolean success = false;
+		if (input.length() == 0) {
+			success = true;
+		} else if (matSection.find()) {
 			String in_match = matSection.toMatchResult().group();
-			fail = parseSection(in_match);
+			success = parseSection(in_match);
 		} else if (input.indexOf(DELIM_OPTION) != -1) {
-			fail = parseOption(input);
+			success = parseOption(input);
 		}
 
-		parseAddComment(parsedInlineComment);
-		return fail;
+		parseSaveComment(parsedInlineComment);
+
+		return success;
 	}
 
+	/**
+	 * Sparsuje cast riadku, kde je definovany nazov Sekcie
+	 *
+	 * @param input cast riadku
+	 * @return vysledok parsovania - true/false
+	 */
 	private boolean parseSection(String input) {
 		Pattern patId = Pattern.compile(Patterns.PATTERN_ID);
 		Matcher m = patId.matcher(input);
@@ -661,13 +669,18 @@ public class IniParserImpl implements IniParser {
 
 		parsedSection.setPriorComments(parsedCommentsList);
 		parsedSection.setInlineComment(parsedInlineComment);
-
 		parsedCommentsList = null;
 		parsedInlineComment = "";
 
 		return true;
 	}
 
+	/**
+	 * Sparsuje cast riadku, kde je definovana hodnota optiony.
+	 *
+	 * @param input cast riadku
+	 * @return vysledok parsovania - true/false
+	 */
 	private boolean parseOption(String input) {
 		String[] parts = input.split(Character.toString(DELIM_OPTION));
 
@@ -676,7 +689,7 @@ public class IniParserImpl implements IniParser {
 			return false;
 		}
 
-		Pattern patId = Pattern.compile(Patterns.PATTERN_ID);
+		Pattern patId = Pattern.compile(Patterns.PATTERN_ID_STRICT);
 		Matcher m_id = patId.matcher(parts[0]);
 
 		if (!m_id.find()) {
@@ -739,7 +752,13 @@ public class IniParserImpl implements IniParser {
 		return true;
 	}
 
-	private String trim_special(String input) {
+	/**
+	 * Vyhod z retazca zbytocne medzery.
+	 * Medzery, ktore su "backslashnute" v retzci zostavaju.
+	 * @param input vstupny retazec
+	 * @return vycisteny vystup
+	 */
+	private String trimSpacesSpecial(String input) {
 		boolean isBS = false;
 
 		String output = new String();
