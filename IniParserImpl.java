@@ -495,7 +495,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void readFile(String fileName) throws IOException {
+	public void readFile(String fileName) throws IOException, ParserException {
 		File file = new File(fileName);
 		FileInputStream fs = new FileInputStream(file);
 
@@ -504,7 +504,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void readStream(InputStream inStream) throws IOException {
+	public void readStream(InputStream inStream) throws IOException, ParserException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
 		StringBuilder sb = new StringBuilder();
 		String line = null;
@@ -517,20 +517,18 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void readString(String inString) {
+	public void readString(String inString) throws ParserException {
 		BufferedReader reader = new BufferedReader(new StringReader(inString));
         
-		boolean success = true;
 		try {
 			String line;
 			int linenum = 0;
 			while ((line = reader.readLine()) != null) {
 				linenum ++;
 
-				success = parseLine(line);
+				boolean success = parseLine(line);
 				if (success == false) {
-					System.out.println("Fatal error on line " + linenum);
-					break;
+					throw new ParserException("Fatal error on line " + linenum);
 				}
 			}
 		} catch (Exception e) {
@@ -539,10 +537,16 @@ public class IniParserImpl implements IniParser {
 			parseFinish();
 		}
 
+		CheckVisitor cv = new CheckVisitor();
+		this.accept(cv);
+
+		if (!cv.isOK()) {
+			throw new ParserException("Mandatory options not defined");
+		}
 	}
 
 	@Override
-	public void writeFile(String fileName) throws IOException {
+	public void writeFile(String fileName) throws IOException, ParserException {
 		File file = new File(fileName);
 		FileOutputStream fs = new FileOutputStream(file);
 
@@ -551,13 +555,20 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void writeStream(OutputStream outStream) throws IOException {
+	public void writeStream(OutputStream outStream) throws IOException, ParserException {
 		String data = this.writeString();
 		outStream.write(data.getBytes());
 	}
 
 	@Override
-	public String writeString() {
+	public String writeString() throws ParserException {
+		CheckVisitor cv = new CheckVisitor();
+		this.accept(cv);
+
+		if (!cv.isOK()) {
+			throw new ParserException("Mandatory options not defined");
+		}
+
 		StringVisitor sv = new StringVisitor();
 		this.accept(sv);
 

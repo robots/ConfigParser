@@ -21,41 +21,47 @@ public interface IniParser {
 	 * Cteni konfigurace ze souboru
 	 * @param fileName nazev souboru
 	 * @throws IOException V pripade chyby cteni
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void readFile(String fileName) throws IOException;
+	public void readFile(String fileName) throws IOException, ParserException;
 	
 	/**
 	 * Zapis konfigurace do souboru
 	 * @param fileName nazev souboru
 	 * @throws IOException V pripade chyby zapisu
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeFile(String fileName) throws IOException;
+	public void writeFile(String fileName) throws IOException, ParserException;
 	
 	/**
 	 * Cteni konfigurace ze streamu
 	 * @param inStream vstupni stream
 	 * @throws IOException V pripade chyby cteni
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void readStream(InputStream inStream) throws IOException;
+	public void readStream(InputStream inStream) throws IOException, ParserException;
 	
 	/**
 	 * Zapis konfigurace do streamu
 	 * @param outStream vystupni stream
 	 * @throws IOException V pripade chyby zapisu
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeStream(OutputStream outStream) throws IOException;
+	public void writeStream(OutputStream outStream) throws IOException, ParserExcepion;
 	
 	/**
 	 * Cteni konfigurace ze stringu
 	 * @param inString string s konfiguraci
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void readString(String inString);
+	public void readString(String inString) throws ParserException;
 	
 	/**
 	 * Zapis konfigurace do stringu
 	 * @return string se zapsanou konfiguraci
+	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public String writeString();
+	public String writeString() throws ParserException;
 
 	
 	/**

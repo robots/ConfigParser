@@ -11,7 +11,7 @@ public class CheckVisitor implements IniVisitor {
 	private boolean checkOK = true;
 	private IniSection lastSection = null;
 
-	public boolean getCheckStatus() {
+	public boolean isOK() {
 		return checkOK;
 	}
 
