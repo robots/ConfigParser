@@ -16,23 +16,58 @@ public class StringVisitor implements IniVisitor {
 		return sb.toString();
 	}
 
+	private void addPriorComment(List<String> comments)
+	{
+		if ((comments == null) || (comments.isEmpty())) {
+			return;
+		}
+
+		ListIterator itr = comments.listIterator();
+
+		while (itr.hasNext()) {
+			sb.append(IniParserImpl.DELIM_COMENT + " " + itr.next() + "\n");
+		}
+	}
+
+	private void addInlineComment(String comment)
+	{
+		if ((comment == null) || (comment.length() == 0))
+			return;
+
+		sb.append(" " + IniParserImpl.DELIM_COMENT + " " + comment);
+	}
+
 	@Override
 	public void visit(IniParserImpl parser) {
 	}
 
 	@Override
 	public void visit(IniSectionImpl section) {
-		sb.append("[" + section.getName() + "]\n");
+		sb.append("\n\n");
+
+		addPriorComment(section.getPriorComments());
+		sb.append("[" + section.getName() + "]");
+
+		String comment = section.getInlineComment();
+		addInlineComment(comment);
+
+		sb.append("\n");
 	}
 
 	@Override
 	public void visit(IniOption option) {
-		
+
+		addPriorComment(option.getPriorComments());
+
 		if(option.isList())
 			visitListValueOption(option);
-		else 
+		else
 			visitSingleValueOption(option);
 
+		String comment = option.getInlineComment();
+		addInlineComment(comment);
+
+		sb.append("\n");
 	}
 	
 	private void visitSingleValueOption(IniOption option)
@@ -40,7 +75,7 @@ public class StringVisitor implements IniVisitor {
 		try {
 			String value = option.getValue();
 
-			sb.append(addBs(option.getName()) + " = " + addBs(value) + "\n");
+			sb.append(addBs(option.getName()) + " " + IniParserImpl.DELIM_OPTION + " " + addBs(value));
 		} catch (Exception e) {
 		}
 	}
@@ -62,7 +97,7 @@ public class StringVisitor implements IniVisitor {
 				}
 			}
 			
-			sb.append(addBs(option.getName()) + " = " + value + "\n");
+			sb.append(addBs(option.getName()) + " " + IniParserImpl.DELIM_OPTION + " " + value);
 		} catch (Exception e) {
 		}
 	}
@@ -73,7 +108,7 @@ public class StringVisitor implements IniVisitor {
 
 		for (char c : input.toCharArray()) {
 			if (c == ' ') {
-				output += '\\';
+				output += IniParserImpl.CHAR_BACKSLASH;
 			}
 			output += c;
 		}
