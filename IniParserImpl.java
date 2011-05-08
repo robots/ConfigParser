@@ -426,7 +426,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException {
+	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException, BadValueException {
 		IniOption opt = this.getOption(sectionName, option);
 
 		opt.setValue(value);
@@ -442,17 +442,27 @@ public class IniParserImpl implements IniParser {
 	@Override
 	public void setSigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
+		
+		try {
 		opt.setValue(value);
+		} catch (BadValueException e) {
+			System.err.println(e.toString());
+		}
 	}
 
 	@Override
 	public void setString(String sectionName, String option, String value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
-		opt.setValue(value);
+		
+		try {
+			opt.setValue(value);
+		} catch (BadValueException e) {
+			System.err.println(e.toString());
+		}
 	}
 
 	@Override
-	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException {
+	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException, BadValueException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}

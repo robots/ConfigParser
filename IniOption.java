@@ -60,19 +60,22 @@ public class IniOption {
 	 */
 	private List<String> priorComments;
 	
+	private IniParser parser;
+	
 	/**
 	 * Metoda pro inicializaci private promennych
 	 * @param name nazev volby
 	 * @param type typ volby
 	 * @param isList zda je volba seznamem hodnot
 	 */
-	private void init(String name, OptionType type, boolean isList )
+	private void init(String name, OptionType type, boolean isList, IniParser parser)
 	{
 		this.name = name;
 		this.defaultValueList = new LinkedList<Element>();
 		this.mandatory = false;
 		this.type = type;
 		this.isList = isList;
+		this.parser = parser;
 	}
 	
 	/**
@@ -80,9 +83,10 @@ public class IniOption {
 	 * @param name Nazev volby
 	 * @param type typ volby
 	 * @param isList zda je volba seznamem hodnot
+	 * @param parser reference na parser, do ktereho volba patri
 	 */
-	public IniOption(String name, OptionType type, boolean isList) {
-		init(name, type, isList);
+	public IniOption(String name, OptionType type, boolean isList, IniParser parser) {
+		init(name, type, isList, parser);
 	}
 	
 	/**
@@ -90,10 +94,11 @@ public class IniOption {
 	 * @param name Nazev volby
 	 * @param type typ volby
 	 * @param isList zda je volba seznamem hodnot
+	 * @param parser reference na parser, do ktereho volba patri
 	 * @param mandatory zda je volba povinna
 	 */
-	public IniOption(String name, OptionType type, boolean isList, boolean mandatory) {
-		init(name, type, isList);
+	public IniOption(String name, OptionType type, boolean isList, IniParser parser,  boolean mandatory) {
+		init(name, type, isList, parser);
 		this.mandatory = mandatory;
 	}
 
@@ -491,11 +496,14 @@ public class IniOption {
 	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
 	 * @throws IniAccessException V pripade pouziti na list-volbu
 	 */
-	public void setValue(String value) throws BadTypeException, IniAccessException {
+	public void setValue(String value) throws BadTypeException, IniAccessException, BadValueException {
 		
 		if((getType() != OptionType.STRING ) && (getType() != OptionType.ENUM) )
 			throw new BadTypeException("Assigning string value to " + getType() + " option");
-		// TODO enum values check
+		
+		if((getType() == OptionType.ENUM) && (!parser.isValidForEnum(enumName, value)))
+			throw new BadValueException("Assigning value: " + value + " to enum " + enumName);
+		
 		setValueUntyped(value);
 	}
 	
@@ -506,10 +514,13 @@ public class IniOption {
 	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
 	 * @throws IniAccessException V pripade pouziti na list-volbu
 	 */
-	public void setValue(BigInteger value) throws BadTypeException, IniAccessException {
+	public void setValue(BigInteger value) throws BadTypeException, IniAccessException, BadValueException {
 		if((getType() != OptionType.SIGNED ) && (getType() != OptionType.UNSIGNED) )
 			throw new BadTypeException("Assigning integer value to " + getType() + " option");
-		// TODO check for unsigned
+		
+		if((getType() == OptionType.UNSIGNED ) && (value.signum() == -1))
+			throw new BadValueException("Assigning negative value to UNSIGNED option");
+		
 		this.setValueUntyped(value.toString());
 	}
 	

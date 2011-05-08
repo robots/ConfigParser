@@ -13,7 +13,7 @@ public interface IniSection {
 	
 	/**
 	 * Zjisteni identifikatoru sekce
-	 * @return
+	 * @return nazev sekce
 	 */
 	public String getName();
 

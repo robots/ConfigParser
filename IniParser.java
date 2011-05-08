@@ -176,8 +176,9 @@ public interface IniParser {
 	 * @param value hodnota volby
 	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
 	 * @throws IniAccessException V pripade pouziti na list-volbu
+	 * @throws BadValueException V pripade dosazovani zaporne hodnoty
 	 */
-	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException;
+	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException, BadValueException;
 	
 	/**
 	 * Nastaveni hodnoty volbe typu enum
@@ -187,8 +188,9 @@ public interface IniParser {
 	 * @param value hodnota volby
 	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
 	 * @throws IniAccessException V pripade pouziti na list-volbu
+	 * @throws BadValueException V pripade dosazovani neplatne pro dany vyctovy typ
 	 */
-	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException;
+	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException, BadValueException;
 
 	/**
 	 * Definice existence volby typu string
