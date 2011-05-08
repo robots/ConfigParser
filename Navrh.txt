@@ -94,8 +94,11 @@ Hlaseni chyb:
     nepripustnou hodnotu. Napriklad do enum volby hodnotu, ktera neni prvkem
     prislusneho vyctoveho typu.
 
-  IniAccessException - vyhazovana v pripade ze se uzivatel snazil pristoupit
+  IniAccessException - vyhazovana v pripade, ze se uzivatel snazil pristoupit
     k list volbe metodou pro jednohodnotovou volbu, nebo opacne.
+
+  ParserException - vyhazovana v pripade, ze nastala chyba pri parsovani
+	  vstupneho konfiguracneho suboru.
 
 Parsovani konfiguracniho souboru:
 
