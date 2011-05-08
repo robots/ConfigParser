@@ -592,7 +592,6 @@ public class IniParserImpl implements IniParser {
 		int idxComent = input.indexOf(';');
 		if (idxComent != -1) {
 			strComment = input.substring(idxComent + 1).trim();
-System.out.println("komentar je '" + strComment + "'");
 
 			if (idxComent == 0) {
 				// only comment on line
@@ -608,11 +607,9 @@ System.out.println("komentar je '" + strComment + "'");
 		if (input.length() == 0) {
 			if (strComment.length() != 0) {
 				// only comment
-System.out.println("test'" + parsedInlineComment + "'");
 				parseAddComment(strComment);
 				return true;
 			}
-System.out.println("zly test'" + parsedInlineComment + "'");
 			return false;
 		}
 
@@ -629,7 +626,6 @@ System.out.println("zly test'" + parsedInlineComment + "'");
 			fail = parseOption(input);
 		}
 
-System.out.println("test'" + parsedInlineComment + "'");
 		parseAddComment(parsedInlineComment);
 		return fail;
 	}
@@ -644,8 +640,6 @@ System.out.println("test'" + parsedInlineComment + "'");
 		}
 
 		String sectionID = m.toMatchResult().group();
-
-System.out.println(" Sekcia '" + sectionID + "'"); 
 
 		boolean autocreate = false;
 		if (parserAttitude != ParserAttitude.STRICT) {
@@ -692,7 +686,6 @@ System.out.println(" Sekcia '" + sectionID + "'");
 			return false;
 		}
 
-System.out.print("Option '" + optionID + "' = ");
 		IniOption parsedOption = parsedSection.getOption(optionID);
 
 		if (parsedOption == null) {
@@ -705,7 +698,6 @@ System.out.print("Option '" + optionID + "' = ");
 		}
 
 		parsedOption.setPriorComments(parsedCommentsList);
-if (parsedCommentsList != null) System.out.println("Adding comments '" + parsedCommentsList.toString());
 		parsedOption.setInlineComment(parsedInlineComment);
 		parsedCommentsList = null;
 		parsedInlineComment = "";
@@ -713,7 +705,6 @@ if (parsedCommentsList != null) System.out.println("Adding comments '" + parsedC
 		if (parsedOption.isList() == false) {
 			try {
 				Element elem = new Element(optionValue);
-System.out.println(" '" + optionValue + "' ");
 				parsedOption.setElement(elem);
 			}
 			catch(IniException e) {
@@ -729,7 +720,6 @@ System.out.println(" '" + optionValue + "' ");
 				LinkedList<Element> listElem = new LinkedList<Element>();
 				for (String value : values) {
 					Element elem = new Element(value);
-System.out.println(" '" + value + "' ");
 					listElem.add(elem);
 				}
 
