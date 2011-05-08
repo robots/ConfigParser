@@ -1,0 +1,108 @@
+Navrh knihovny pro parsovani ini souboru:
+
+Cela knihovna se sestava z tri dulezitych trid a nekolika dalsich pomocnych 
+trid.
+
+Nejprve se zamerme na trojici nejdulezitejsich trid.
+
+IniParser:
+  Jedna se o kontaktni interface mezi uzivatelem a knihovnou a jedna instance 
+  reprezentuje jeden konfiguracni soubor. Jeho ukolem je zprostredkovavat
+  moznosti definice jednotlivych voleb a sekci a pristupu k nim. Stejne tak
+  je jeho ukolem zajistovat jednotlive druhy nacitani a vypisovani konfigurace.
+  
+  Definice struktury konfiguracniho souboru probiha pomoci volani definicnich
+  metod.
+  Pro definovani jednotlivych voleb jsme se rozhodli s ohledem na pohodlnost
+  pouziti zavest metody pro definici primo na zaklade nazvu sekce a nazvu 
+  definovane volby. 
+
+  Pro praci s hodnotami voleb jsme podobne metody nakonec zavrli z toho
+  duvodu, ze uzivatel by mel mit moznost si otestovat, zda uz volba existuje,
+  nebo ji musi teprve definovat. Proto pristup probiha s jednim mezikrokem,
+  behem nehoz si uzivatel pomoci najde metodou getOption prislusnou volbu a
+  pak pristupuje primo k ni.
+
+  Dale je zde moznost (a vlastne nutnost) definovat vyctove typy pouzivane
+  v konfiguracnim souboru a jejich pripustne hodnoty.
+
+IniSection:
+  Jde o interface jedne sekce konfiguracniho souboru.
+
+  Definicni moznosti voleb sekce jsou analogicke k definicnim moznostem celeho
+  parseru. Duvodem je pohodlnejsi pristup pri systematickem definovani voleb
+  ve stejne sekci. 
+
+IniOption: 
+  Trida reprezentujici jednu volbu. Kazda volba si drzi informaci o typu svych
+  hodnot a zda jde o seznam, nebo jednohodnotovou volbu. Vnitrne jsou hodnoty
+  ukladany jako retezce (v instancich tridy Element). Duvodem je moznost
+  nahradit reference uvnitr hodnot az ve chvili pristupu k hodnote. Jednotlive
+  instance jsou take zodpovedne za typovou kontrolu pri prirazovani hodnot a 
+  jejich zpetnem pretypovani pri pristupu k hodnotam. K dispozici jsou sady
+  metod pro pristup k jednotlivym moznym typum hodnot. Existuji varianty pro
+  pristup k jednohodnotovym volbam a seznamum hodnot. Pristup spravnym typem
+  metody se kontroluje. Typ volby lze zjistit metodou getType, zda se jedna
+  o seznam lze zjistit pomoci metody isList. 
+
+Nyni k dalsim designovym rozhodnutim, ktere jsme pri vyvoji ucinili.
+
+Komentare:
+  Semantiku komentaru jsme pochopili nasledovne. 
+
+  Pokud je komentar na stejne radce jako definice nejakeho objektu 
+  (Sekce nebo volba), pak prislusi k tomuto objektu a je u nej ulozen.
+  
+  Komentare na samostantych radkach prislusi objektu ktery nasleduje za nimi.
+  Techto komentaru muze byt nekolik radek a jsou ulozeny jako priorComments u
+  prvniho objektu ktery za nimi nasleduje. Duvodem je skutecnost, ze byva
+  zvykem nejdrive v komentarich popsat co volba znamena a pak terprve volbu
+  uvest.
+
+  Komentare na konci souboru prislusi samotnemu konfiguracnimu objektu, 
+  jsou tedy uvedeny jako closingComments u IniParseru.
+
+Moznost uprav z pohledu uzivatele:
+  Rozhodli jsme se implementovat moznost uzivatelskeho pristupu (krom primeho
+  volani pristupovych metod) i moznost pruchodu pomoci navrhoveho vzoru visitor.
+  IniParser, IniSection a IniOption maji proto metody accept. Timto zpusobem 
+  probiha napriklad uz zahrnuty vypis konfigurace (pouzitim StringVisitoru).
+  Vyhodou tohoto pristupu je, ze neni pro uzivatele napriklad problem sam si
+  napsat nejaky tridu implementujici poskytnuty visitor interface. Muze tak
+  napriklad kontrolovat dalsi integritni omezeni, nebo definovat vlastni format
+  vypisu konfiguracne.
+
+  Postup pruchodu visitorem je nasledujici - Postupne se prochazi sekce,
+  v kazde sekci se prochazi vsechny volby. Nakonec se pristoupi k IniParseru.
+
+Hlaseni chyb:
+  Jako zpusob hlaseni chyb jsme zvolili system vyjimek. Hlavni vyhodu vidime
+  ve skutecnosti, ze pomoci vyjimek dame uzivateli nejen vedet ze nastala
+  chyba, ale take o jaky typ chyby se jedna. Uzivatel ma pak moznost na chybu
+  reagovat primo z programu. Napriklad pokud pristoupi k list-volbe metodou 
+  pro pristup k jednohodnotove volbe, pomoci vyjimky se dozvi o sve chybe
+  a muze zvolit spravnou metodu pristupu.
+
+  Vsechny vyjimky jsou potomky abstraktni tridy IniException. Konkretni
+  vyhazovane vyjimky jsou 
+
+  BadTypeException - vyhazovana v pripade, ze se uzivatel snazil ziskat
+    typovanou hodnotu z volby spatneho typu (napr. getBoolean na string
+    hodnotu)
+
+  BadValueException - vyhazovana v pripade, ze se uzivatel snazi dosadit
+    nepripustnou hodnotu. Napriklad do enum volby hodnotu, ktera neni prvkem
+    prislusneho vyctoveho typu.
+
+  IniAccessException - vyhazovana v pripade ze se uzivatel snazil pristoupit
+    k list volbe metodou pro jednohodnotovou volbu, nebo opacne.
+
+Parsovani konfiguracniho souboru:
+
+  Pro parsovani konfiguracniho souboru jsme se rozhodli vyuzit toho, ze Java
+  umi hezky pracovat s regularnimi vyrazy a pouzivame jich k matchovani
+  identifikatoru. Je sice pravda, ze regularni vyrazy byvaji nekdy obavane,
+  ale podle naseho nazoru je to preci jen elegantnejsi reseni nez zdlouhave
+  funkce na prochazeni po znacich a testovani a osetrovani vsech pripadu.
+  
+  
