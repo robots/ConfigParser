@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
@@ -436,7 +437,7 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption getOption(String option) {
-		
+	/*
 		// Nalezeni volby
 		int index = optionList.indexOf(option);
 		
@@ -446,8 +447,20 @@ public class IniSectionImpl implements IniSection {
 		
 		// Vratit volbu
 		IniOption opt = optionList.get(index);
-		
+
 		return opt;
+		*/
+		ListIterator itr = optionList.listIterator();
+
+		while (itr.hasNext()) {
+			IniOption opt = (IniOption)itr.next();
+
+			if (opt.getName().equals(option)) {
+				return opt;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
