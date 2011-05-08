@@ -3,7 +3,10 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 /**
- * Konkretni implementace interface IniVisitor
+ * Konkretni implementace interface IniVisitor.
+ * 
+ * Stara sa o vygenerovanie obsahu konfiguracneho suboru.
+ *
  * @author Vladimir Fiklik, Michal Demin
  *
  */
