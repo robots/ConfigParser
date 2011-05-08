@@ -5,10 +5,26 @@ import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Trida implementujici interface IniSection
+ * @author Vladimir Fiklik, Michal Demin
+ *
+ */
 public class IniSectionImpl implements IniSection {
 
+	/**
+	 * Seznam voleb v sekci
+	 */
 	private List<IniOption> optionList;
+	
+	/**
+	 * Identifikator sekce
+	 */
 	private String name;
+	
+	/**
+	 * Reference na parser, do ktereho sekce patri
+	 */
 	private IniParser parser;
 	
 	/** 
@@ -23,6 +39,11 @@ public class IniSectionImpl implements IniSection {
 	 */
 	private List<String> priorComments;
 
+	/**
+	 * Kontstruktor sekce
+	 * @param name nazev sekce
+	 * @param parser parser, do ktereho sekce patri
+	 */
 	public IniSectionImpl(String name, IniParser parser) {
 		this.parser = parser;
 		optionList = new LinkedList<IniOption>();
@@ -250,24 +271,30 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption defineOptListEnum(String option, String enumName,
-		char delimiter, List<String> defaultValue) throws BadValueException, IniAccessException{
+		char delimiter, List<String> defaultValue) throws BadValueException {
 		
 		IniOption opt = new IniOption(option, OptionType.ENUM, true);
 		LinkedList<Element> defaultValues = new LinkedList<Element>();
-		opt.setDelimiter(delimiter);
-
-		for (String strVal : defaultValue) {
-			Element element = new Element();
+		
+		try {
+			opt.setDelimiter(delimiter);
 			
-			if(! parser.isValidForEnum(enumName, strVal))
-				throw new BadValueException("Invalid Value");
-			
-			element.setValue(strVal);
-			defaultValues.add(element);
+			for (String strVal : defaultValue) {
+				Element element = new Element();
+				
+				if(! parser.isValidForEnum(enumName, strVal))
+					throw new BadValueException("Invalid Value");
+				
+				element.setValue(strVal);
+				defaultValues.add(element);
+			}
+	
+			opt.setEnumName(enumName);
+			opt.setDefaultElementList(defaultValues);
+				
+		} catch (IniAccessException e) {
+			System.err.println(e.toString());
 		}
-
-		opt.setEnumName(enumName);
-		opt.setDefaultElementList(defaultValues);
 		optionList.add(opt);
 
 		return opt;
@@ -476,7 +503,7 @@ public class IniSectionImpl implements IniSection {
 
 	/**
 	 * Nastaveni radkoveho komentare k sekci
-	 * @param comment radkovy komentar prislusejici sekci 
+	 * @param inlineComment radkovy komentar prislusejici sekci 
 	 */
 	@Override
 	public void setInlineComment(String inlineComment) {

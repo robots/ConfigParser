@@ -41,10 +41,18 @@ public class Element {
 		return false;
 	}
 
+	/**
+	 * Nastaveni hodnoty
+	 * @param value hodnota
+	 */
 	public void setValue(String value) {
 		this.value = value;
 	}
 
+	/**
+	 * Zjisteni hodnoty
+	 * @return hodnota 
+	 */
 	public String getValue() {
 		return value;
 	}

@@ -17,10 +17,21 @@ import java.util.Set;
 import java.util.regex.*;
 import java.util.LinkedList;
 
-
+/**
+ * Konkretni implementace interface IniParser
+ * @author Vladimir Fiklik, Michal Demin
+ *
+ */
 public class IniParserImpl implements IniParser {
 	
+	/**
+	 * Seznam sekci
+	 */
 	private List<IniSection> sectionList;
+	
+	/**
+	 * Mapa vyctovych typu <Nazev typu, Mnozina pripustnych hodnot>
+	 */
 	private Map<String, Set<String> > enumMap;
 	
 	/**
@@ -28,10 +39,25 @@ public class IniParserImpl implements IniParser {
 	 * Kazda radka je ulozena v samostatnem stringu
 	 */
 	private List<String> closingComments;
-
+	
+	/**
+	 * Znakova konstanta reprezentujici zpetne lomitko
+	 */
 	public static final char CHAR_BACKSLASH = '\\';
+	
+	/**
+	 * Znakova konstanta reprezentujici mezeru
+	 */
 	public static final char CHAR_SPACE = ' ';
+	
+	/**
+	 * Znakova konstanta reprezentujici oddelovac komentaru
+	 */
 	public static final char DELIM_COMENT = ';';
+	
+	/**
+	 * Znakova konstanta reprezentujici prirazovaci znak
+	 */
 	public static final char DELIM_OPTION = '=';
 
 	private IniSection parsedSection = null;
@@ -45,6 +71,9 @@ public class IniParserImpl implements IniParser {
 	public static final String PATTERN_SECTION = "\\[[^\\]]*\\]"; 
 	public static final String PATTERN_SECTION_STRICT = "\\[[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*\\]";
 	
+	/**
+	 * Konstruktor, defaultni rezim STRICT
+	 */
 	public IniParserImpl()
 	{
 		sectionList = new LinkedList<IniSection>();
@@ -63,6 +92,8 @@ public class IniParserImpl implements IniParser {
 		IniSection section = new IniSectionImpl(sectionName, this);
 		sectionList.add(section);
 
+		// TODO check na unikatnost sekce
+		
 		return section;
 	}
 
@@ -78,7 +109,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public boolean getBoolean(String sectionName, String option) throws IniException {
+	public boolean getBoolean(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -87,7 +118,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getEnum(String sectionName, String option) throws IniException {
+	public String getEnum(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -95,7 +126,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public float getFloat(String sectionName, String option) throws IniException {
+	public float getFloat(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -107,6 +138,13 @@ public class IniParserImpl implements IniParser {
 		return getSection(sectionName, false);
 	}
 
+	/**
+	 * Nalezne sekci podle jejiho nazvu. V auto-create rezimu pokud nenalezne
+	 * zadanou sekci, automaticky ji vytvori
+	 * @param sectionName nazev sekce
+	 * @param autoCreate rezim automatickeho vytvareni
+	 * @return hledana sekce, nebo null pokud neni zapnut auto-create rezim
+	 */
 	protected IniSection getSection(String sectionName, boolean autoCreate) {
 		IniSection section = findSection(sectionName);
 
@@ -117,7 +155,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public BigInteger getSigned(String sectionName, String option) throws IniException {
+	public BigInteger getSigned(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -125,7 +163,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getString(String sectionName, String option) throws IniException {
+	public String getString(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -133,7 +171,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public BigInteger getUnsigned(String sectionName, String option) throws IniException {
+	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -141,7 +179,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getUntyped(String sectionName, String option) throws IniException {
+	public String getUntyped(String sectionName, String option) throws BadTypeException, IniAccessException {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
@@ -162,7 +200,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setBoolean(String sectionName, String option, boolean value) throws IniException {
+	public void setBoolean(String sectionName, String option, boolean value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 
 		opt.setValue(value);
@@ -264,9 +302,16 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public IniOption defineOptEnum(String sectionName, String option,
-			String enumName, String defaultValue) throws BadValueException, IniAccessException {
+			String enumName, String defaultValue) throws BadValueException {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptEnum(option, enumName, defaultValue);
+		
+		IniOption opt = null;
+		
+		try {
+			opt = section.defineOptEnum(option, enumName, defaultValue);
+		} catch (IniAccessException e) {
+			System.err.println(e.toString());
+		}
 
 		return opt;
 	}
@@ -373,7 +418,7 @@ public class IniParserImpl implements IniParser {
 	@Override
 	public IniOption defineOptListEnum(String sectionName, String option,
 			String enumName, char delimiter, List<String> defaultValue)
-			throws BadValueException, IniAccessException {
+			throws BadValueException {
 		IniSection section = getSection(sectionName, true);
 		IniOption opt = section.defineOptListEnum(option, enumName, delimiter, defaultValue);
 
@@ -381,7 +426,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setEnum(String sectionName, String option, String enumName, String value) throws IniException {
+	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 
 		opt.setValue(value);
@@ -389,29 +434,35 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void setFloat(String sectionName, String option, float value) throws IniException {
+	public void setFloat(String sectionName, String option, float value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setSigned(String sectionName, String option, BigInteger value) throws IniException {
+	public void setSigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setString(String sectionName, String option, String value) throws IniException {
+	public void setString(String sectionName, String option, String value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
 	@Override
-	public void setUnsigned(String sectionName, String option, BigInteger value) throws IniException {
+	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException {
 		IniOption opt = this.getOption(sectionName, option);
 		opt.setValue(value);
 	}
 
+	/**
+	 * Nalezme volbu podle zadaneho nazvu sekce a volby
+	 * @param sectionName nazev sekce
+	 * @param option nazev volby
+	 * @return hledana volba, nebo null pokud neexistuje
+	 */
 	protected IniOption getOption(String sectionName, String option)
 	{
 		return getSection(sectionName).getOption(option);

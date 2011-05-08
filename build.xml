@@ -28,6 +28,7 @@
 	</target>
 
 	<target name="doc" description="dokumentace">
+		<delete dir="${docdir}/"/>
 		<mkdir dir="${docdir}"/>
 		<javadoc sourcefiles="${basedir}/*.java" destdir="${docdir}"/>
 	</target>
