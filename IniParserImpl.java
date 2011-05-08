@@ -647,7 +647,12 @@ System.out.println("test'" + parsedInlineComment + "'");
 
 System.out.println(" Sekcia '" + sectionID + "'"); 
 
-		parsedSection = this.getSection(sectionID);
+		boolean autocreate = false;
+		if (parserAttitude != ParserAttitude.STRICT) {
+			autocreate = true;
+		}
+		
+		parsedSection = this.getSection(sectionID, autocreate);
 
 		if (parsedSection == null) {
 			System.err.println("no such section defined - '" + sectionID + "'");
@@ -691,8 +696,12 @@ System.out.print("Option '" + optionID + "' = ");
 		IniOption parsedOption = parsedSection.getOption(optionID);
 
 		if (parsedOption == null) {
-			System.err.println("no such option '" + optionID + "' defined in section '" + parsedSection.getName() + "'");
-			return false;
+			if (parserAttitude == ParserAttitude.STRICT) {
+				System.err.println("no such option '" + optionID + "' defined in section '" + parsedSection.getName() + "'");
+				return false;
+			} else {
+				parsedOption = parsedSection.defineOptString(optionID);	
+			}
 		}
 
 		parsedOption.setPriorComments(parsedCommentsList);
