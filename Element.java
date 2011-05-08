@@ -15,8 +15,8 @@ public class Element {
 	public Element() {}
 	
 	/**
-	 * 
-	 * @param value Hodnota volby
+	 * Konstruktor dosazujici pocatecni hodnotu volby
+	 * @param value hodnota volby
 	 */
 	public Element(String value)
 	{
