@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,16 +35,20 @@ public class UserCase1 {
 		} catch (IOException e) {
 			// catch any io exception
 			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (ParserException e) {
 			// catch any parser exception
 			e.printStackTrace();
 		}
 
 
+		try {
 		// access parsed data
 		iniP.getSection("Database").getOption("user").getValueString();
 		iniP.getSection("Database").getOption("pass").getValueString();
 		iniP.getSection("Database").getOption("secure").getValueBool();
+		} catch (IniException e) {
+			System.err.println(e.toString());
+		}
 		
 	}
 
