@@ -103,31 +103,7 @@ public class IniParserImpl implements IniParser {
 
 	}
 
-	@Override
-	public boolean getBoolean(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueBool();
-
-	}
-
-	@Override
-	public String getEnum(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueEnum();
-	}
-
-	@Override
-	public float getFloat(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueFloat();
-	}
-
+	
 	@Override
 	public IniSection getSection(String sectionName) {
 		return getSection(sectionName, false);
@@ -154,30 +130,7 @@ public class IniParserImpl implements IniParser {
 		return section;
 	}
 
-	@Override
-	public BigInteger getSigned(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueSigned();
-	}
-
-	@Override
-	public String getString(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueString();
-	}
-
-	@Override
-	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException, IniAccessException {
-		IniSection section = findSection(sectionName);
-		IniOption opt = section.getOption(option);
-
-		return opt.getValueUnsigned();
-	}
-
+	
 	@Override
 	public String getUntyped(String sectionName, String option){
 		IniSection section = findSection(sectionName);
@@ -208,13 +161,6 @@ public class IniParserImpl implements IniParser {
 
 		return enumValues.contains(value);
 
-	}
-
-	@Override
-	public void setBoolean(String sectionName, String option, boolean value) throws BadTypeException, IniAccessException {
-		IniOption opt = this.getOption(sectionName, option);
-
-		opt.setValue(value);
 	}
 
 	@Override
@@ -434,48 +380,6 @@ public class IniParserImpl implements IniParser {
 		IniOption opt = section.defineOptListEnum(option, enumName, delimiter, defaultValue);
 
 		return opt;
-	}
-
-	@Override
-	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException, BadValueException {
-		IniOption opt = this.getOption(sectionName, option);
-
-		opt.setValue(value);
-		opt.setEnumName(enumName);
-	}
-
-	@Override
-	public void setFloat(String sectionName, String option, float value) throws BadTypeException, IniAccessException {
-		IniOption opt = this.getOption(sectionName, option);
-		opt.setValue(value);
-	}
-
-	@Override
-	public void setSigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException {
-		IniOption opt = this.getOption(sectionName, option);
-		
-		try {
-		opt.setValue(value);
-		} catch (BadValueException e) {
-			System.err.println(e.toString());
-		}
-	}
-
-	@Override
-	public void setString(String sectionName, String option, String value) throws BadTypeException, IniAccessException {
-		IniOption opt = this.getOption(sectionName, option);
-		
-		try {
-			opt.setValue(value);
-		} catch (BadValueException e) {
-			System.err.println(e.toString());
-		}
-	}
-
-	@Override
-	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException, BadValueException {
-		IniOption opt = this.getOption(sectionName, option);
-		opt.setValue(value);
 	}
 
 	@Override

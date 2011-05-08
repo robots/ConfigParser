@@ -63,67 +63,6 @@ public interface IniParser {
 	 */
 	public String writeString() throws ParserException;
 
-	
-	/**
-	 * Zjisteni hodnoty z volby typu string
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public String getString(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Zjisteni hodnoty z volby typu float
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public float getFloat(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Zjisteni hodnoty z volby typu boolean
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public boolean getBoolean(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Zjisteni hodnoty z volby typu signed
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public BigInteger getSigned(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Zjisteni hodnoty z volby typu unsigned
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public BigInteger getUnsigned(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Zjisteni hodnoty z volby typu enum
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public String getEnum(String sectionName, String option) throws BadTypeException, IniAccessException;
-	
 	/**
 	 * Zjisteni hodnoty z volby bez kontroly typu
 	 * @param sectionName nazev sekce do ktere volba patri
@@ -140,69 +79,6 @@ public interface IniParser {
 	 */
 	public IniOption getOption(String sectionName, String option);
 	
-	/**
-	 * Nastaveni hodnoty volbe typu string
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public void setString(String sectionName, String option, String value) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Nastaveni hodnoty volbe typu float
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public void setFloat(String sectionName, String option, float value) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Nastaveni hodnoty volbe typu boolean
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public void setBoolean(String sectionName, String option, boolean value) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Nastaveni hodnoty volbe typu signed
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 */
-	public void setSigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException;
-	
-	/**
-	 * Nastaveni hodnoty volbe typu unsigned
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 * @throws BadValueException V pripade dosazovani zaporne hodnoty
-	 */
-	public void setUnsigned(String sectionName, String option, BigInteger value) throws BadTypeException, IniAccessException, BadValueException;
-	
-	/**
-	 * Nastaveni hodnoty volbe typu enum
-	 * @param sectionName nazev sekce do ktere volba patri
-	 * @param option Nazev volby
-	 * @param enumName Nazev vyctoveho typu, do nehoz patri hodnoty volby
-	 * @param value hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
-	 * @throws BadValueException V pripade dosazovani neplatne pro dany vyctovy typ
-	 */
-	public void setEnum(String sectionName, String option, String enumName, String value) throws BadTypeException, IniAccessException, BadValueException;
-
 	/**
 	 * Definice existence volby typu string
 	 * @param sectionName Nazev sekce do niz volba patri
