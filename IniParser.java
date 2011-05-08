@@ -47,7 +47,7 @@ public interface IniParser {
 	 * @throws IOException V pripade chyby zapisu
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeStream(OutputStream outStream) throws IOException, ParserExcepion;
+	public void writeStream(OutputStream outStream) throws IOException, ParserException;
 	
 	/**
 	 * Cteni konfigurace ze stringu
