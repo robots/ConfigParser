@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class MainTest {
+public class UserCase2 {
 
 	/**
 	 * @param args
