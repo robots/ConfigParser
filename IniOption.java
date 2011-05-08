@@ -63,6 +63,10 @@ public class IniOption {
 	 */
 	private List<String> priorComments;
 	
+	/**
+	 * Reference na parser, do ktereho volba patri.
+	 * Dulezite pro vyhledavani referenci a pripustnych hodnot
+	 */
 	private IniParser parser;
 	
 	/**
@@ -75,6 +79,8 @@ public class IniOption {
 	{
 		this.name = name;
 		this.defaultValueList = new LinkedList<Element>();
+		this.valueList = new LinkedList<Element>();
+		this.priorComments = new LinkedList<String>();
 		this.mandatory = false;
 		this.type = type;
 		this.isList = isList;
@@ -130,7 +136,14 @@ public class IniOption {
 		if(this.isList())
 			throw new IniAccessException("Setting single value to list-type option");
 		
+		if(this.defaultValueList == null)
+			this.defaultValueList = new LinkedList<Element>();
+		
 		this.defaultValueList.clear();
+		
+		if(defaultValue == null)
+			return;
+		
 		this.defaultValueList.add(defaultValue);
 	}
 
@@ -142,6 +155,9 @@ public class IniOption {
 	public Element getDefaultElement() throws IniAccessException {
 		if (this.isList())
 			throw new IniAccessException("List option accessed as single-value option");
+		
+		if(this.defaultValueList == null)
+			return null;
 		
 		return defaultValueList.get(0);
 	}
@@ -179,6 +195,9 @@ public class IniOption {
 		if (this.isList())
 			throw new IniAccessException("Single-value option accessed as list option.");
 
+		if(this.valueList == null)
+			return null;
+
 		return valueList.get(0);
 	}
 
@@ -196,6 +215,10 @@ public class IniOption {
 		}
 		
 		this.valueList.clear();
+		
+		if(value == null)
+			return;
+		
 		this.valueList.add(value);
 	}
 	
@@ -328,7 +351,7 @@ public class IniOption {
 	public String getValueEnum() throws BadTypeException, IniAccessException {
 		if(this.type != OptionType.ENUM)
 			throw new BadTypeException("Requested option is not of type Enum");
-		// TODO check enum value
+
 		return this.getValue();
 	}
 	
@@ -366,6 +389,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type Boolean");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<Boolean> resultList = new LinkedList<Boolean>();
 		
 		for(Element element : elementValues)
@@ -389,6 +416,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type String");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<String> resultList = new LinkedList<String>();
 		
 		for(Element element : elementValues)
@@ -412,6 +443,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type Float");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<Float> resultList = new LinkedList<Float>();
 		
 		for(Element element : elementValues)
@@ -435,6 +470,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type Signed");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<BigInteger> resultList = new LinkedList<BigInteger>();
 		
 		for(Element element : elementValues)
@@ -458,6 +497,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type Unsigned");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<BigInteger> resultList = new LinkedList<BigInteger>();
 		
 		for(Element element : elementValues)
@@ -481,6 +524,10 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of type Enum");
 		
 		List<Element> elementValues = this.getValueList();
+		
+		if(elementValues == null)
+			return null;
+		
 		List<String> resultList = new LinkedList<String>();
 		
 		for(Element element : elementValues)
@@ -562,7 +609,14 @@ public class IniOption {
 		if(this.isList())
 			throw new IniAccessException("Setting single value to list-type option");
 		
+		if(this.valueList == null)
+			this.valueList = new LinkedList<Element>();
+		
 		this.valueList.clear();
+		
+		if(value == null)
+			return;
+		
 		this.valueList.add(new Element(value));
 	}
 	
@@ -571,6 +625,9 @@ public class IniOption {
 	 * @param visitor instance visitora
 	 */
 	public void accept(IniVisitor visitor){
+		if(visitor == null)
+			return;
+		
 		visitor.visit(this);		
 	}
 

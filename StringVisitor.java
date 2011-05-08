@@ -59,8 +59,7 @@ public class StringVisitor implements IniVisitor {
 	 * @param parser referencia na parser
 	 */
 	@Override
-	public void visit(IniParserImpl parser)
-	{
+	public void visit(IniParser parser) {
 		addPriorComment(parser.getClosingComments());
 	}
 
@@ -70,8 +69,7 @@ public class StringVisitor implements IniVisitor {
 	 * @param section referencia na IniSection
 	 */
 	@Override
-	public void visit(IniSectionImpl section)
-	{
+	public void visit(IniSection section) {
 		sb.append("\n\n");
 
 		addPriorComment(section.getPriorComments());

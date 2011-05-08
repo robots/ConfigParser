@@ -455,4 +455,18 @@ public interface IniParser {
 	 * @param visitor instance visitora
 	 */
 	public void accept (IniVisitor visitor);
+	
+	/**
+	 * Zjisteni komentaru na konci ini souboru, ktere neprislusi zadne sekci
+	 * Kazda radka je ulozena v samostatnem stringu.
+	 * @return Seznam komentaru na konci souboru nebo null, pokud takove neexistuji
+	 */
+	public List<String> getClosingComments();
+	
+	/**
+	 * Nastaveni komentaru na konci ini souboru, ktere neprislusi zadne sekci
+	 * Kazda radka je ulozena v samostatnem stringu.
+	 * @param closingComments Seznam komentaru
+	 */
+	public void setClosingComments(List<String> closingComments);
 }
