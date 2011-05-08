@@ -702,8 +702,23 @@ public class IniOption {
 		String referencedSection = null;
 		String referencedOption = null;
 		
+		// Find the reference-part of value
+		String reference = null;
+		Pattern referencePattern = Pattern.compile(Patterns.PATTERN_REFER);
+		Matcher referenceMatcher = referencePattern.matcher(element.getValue());
+		
+		if(referenceMatcher.find())
+			reference = referenceMatcher.group();
+		
+		if(reference == null)
+			return element.getValue();
+		
+		
+		// Skip initial ${
+		reference = reference.substring(2);
+		
 		Pattern p_id = Pattern.compile(Patterns.PATTERN_ID);
-	    Matcher m1 = p_id.matcher(element.getValue());
+	    Matcher m1 = p_id.matcher(reference);
 	    
 	    MatchResult res = null;
 
@@ -726,7 +741,7 @@ public class IniOption {
 	    String referencedValue = parser.getUntyped(referencedSection, referencedOption);
 	    
 	    // Replace reference with value
-	    String dereferencedValue = element.getValue().replace("{"+referencedSection+"#"+referencedOption+"}", referencedValue);
+	    String dereferencedValue = element.getValue().replace("${"+referencedSection+"#"+referencedOption+"}", referencedValue);
 	    
 	    return dereferencedValue;
 	}
