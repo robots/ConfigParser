@@ -84,7 +84,8 @@ public class IniParserImpl implements IniParser {
 	public IniSection addSection(String sectionName) throws BadValueException {
 		
 		if(getSection(sectionName, false) != null)
-			throw new BadValueException("Section " + sectionName + " already exists");
+			throw new BadValueException("Section " + sectionName + 
+					" already exists");
 		
 		IniSection section = new IniSectionImpl(sectionName, this);
 		sectionList.add(section);
@@ -286,7 +287,8 @@ public class IniParserImpl implements IniParser {
 	public IniOption defineOptListString(String sectionName, String option,
 			char delimiter, List<String> defaultValue) {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListString(option, delimiter, defaultValue);
+		IniOption opt = section.defineOptListString(option, delimiter, 
+				defaultValue);
 
 		return opt;
 	}
@@ -304,7 +306,8 @@ public class IniParserImpl implements IniParser {
 	public IniOption defineOptListBoolean(String sectionName, String option,
 			char delimiter, List<Boolean> defaultValue) {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListBoolean(option, delimiter, defaultValue);
+		IniOption opt = section.defineOptListBoolean(option, delimiter, 
+				defaultValue);
 
 		return opt;
 	}
@@ -322,7 +325,8 @@ public class IniParserImpl implements IniParser {
 	public IniOption defineOptListFloat(String sectionName, String option,
 			char delimiter, List<Float> defaultValue) {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListFloat(option, delimiter, defaultValue);
+		IniOption opt = section.defineOptListFloat(option, delimiter, 
+				defaultValue);
 
 		return opt;
 	}
@@ -340,7 +344,8 @@ public class IniParserImpl implements IniParser {
 	public IniOption defineOptListSigned(String sectionName, String option,
 			char delimiter, List<BigInteger> defaultValue) {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListSigned(option, delimiter, defaultValue);
+		IniOption opt = section.defineOptListSigned(option, delimiter, 
+				defaultValue);
 
 		return opt;
 	}
@@ -358,7 +363,8 @@ public class IniParserImpl implements IniParser {
 	public IniOption defineOptListUnsigned(String sectionName, String option,
 			char delimiter, List<BigInteger> defaultValue) {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListUnsigned(option, delimiter, defaultValue);
+		IniOption opt = section.defineOptListUnsigned(option, delimiter, 
+				defaultValue);
 
 		return opt;
 	}
@@ -377,7 +383,8 @@ public class IniParserImpl implements IniParser {
 			String enumName, char delimiter, List<String> defaultValue)
 			throws BadValueException {
 		IniSection section = getSection(sectionName, true);
-		IniOption opt = section.defineOptListEnum(option, enumName, delimiter, defaultValue);
+		IniOption opt = section.defineOptListEnum(option, enumName, delimiter,
+				defaultValue);
 
 		return opt;
 	}
@@ -408,8 +415,12 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void readStream(InputStream inStream) throws IOException, ParserException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
+	public void readStream(InputStream inStream) 
+		throws IOException, ParserException {
+		
+		BufferedReader br = new BufferedReader(
+				new	InputStreamReader(inStream));
+		
 		StringBuilder sb = new StringBuilder();
 		String line = null;
 
@@ -432,7 +443,8 @@ public class IniParserImpl implements IniParser {
 
 				boolean success = parseLine(line);
 				if (success == false) {
-					throw new ParserException("Fatal error on line " + linenum);
+					throw new ParserException("Fatal error on line " + 
+							linenum);
 				}
 			}
 		} catch (Exception e) {
@@ -450,7 +462,9 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void writeFile(String fileName) throws IOException, ParserException {
+	public void writeFile(String fileName) 
+		throws IOException,	ParserException {
+		
 		File file = new File(fileName);
 		FileOutputStream fs = new FileOutputStream(file);
 
@@ -459,7 +473,9 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void writeStream(OutputStream outStream) throws IOException, ParserException {
+	public void writeStream(OutputStream outStream) 
+		throws IOException, ParserException {
+		
 		String data = this.writeString();
 		outStream.write(data.getBytes());
 	}
@@ -578,7 +594,8 @@ public class IniParserImpl implements IniParser {
 		parsedSection = this.getSection(sectionID, autocreate);
 
 		if (parsedSection == null) {
-			System.err.println("no such section defined - '" + sectionID + "'");
+			System.err.println("no such section defined - '" + sectionID +
+					"'");
 			return false;
 		}
 
@@ -600,7 +617,8 @@ public class IniParserImpl implements IniParser {
 		String[] parts = input.split(Character.toString(DELIM_OPTION));
 
 		if (parts.length != 2) {
-			System.err.println(" '" + DELIM_OPTION + "' missing, or more than once on line");
+			System.err.println(" '" + DELIM_OPTION + "' missing, or more than " +
+					"once on line");
 			return false;
 		}
 
@@ -624,7 +642,10 @@ public class IniParserImpl implements IniParser {
 
 		if (parsedOption == null) {
 			if (parserAttitude == ParserAttitude.STRICT) {
-				System.err.println("no such option '" + optionID + "' defined in section '" + parsedSection.getName() + "'");
+				System.err.println("no such option '" + optionID + 
+						"' defined in section '" + 
+						parsedSection.getName() + "'");
+				
 				return false;
 			} else {
 				parsedOption = parsedSection.defineOptString(optionID);	
