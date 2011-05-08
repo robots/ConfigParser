@@ -37,7 +37,7 @@ public class StringVisitor implements IniVisitor {
 			return;
 		}
 
-		ListIterator itr = comments.listIterator();
+		ListIterator<String> itr = comments.listIterator();
 
 		while (itr.hasNext()) {
 			sb.append(IniParserImpl.DELIM_COMENT + " " + itr.next() + "\n");
@@ -119,7 +119,8 @@ public class StringVisitor implements IniVisitor {
 		try {
 			String value = option.getValue();
 
-			sb.append(addBs(option.getName()) + " " + IniParserImpl.DELIM_OPTION + " " + addBs(value));
+			sb.append(addBs(option.getName()) + " " + 
+					IniParserImpl.DELIM_OPTION + " " + addBs(value));
 		} catch (Exception e) {
 		}
 	}
@@ -138,10 +139,10 @@ public class StringVisitor implements IniVisitor {
 			String value = "";
 			List<Element> listElem = option.getValueList();
 			
-			ListIterator itr = listElem.listIterator();
+			ListIterator<Element> itr = listElem.listIterator();
 
 			while (itr.hasNext()) {
-				Element elem = (Element)itr.next();
+				Element elem = itr.next();
 				value = value + addBs(elem.getValue());
 
 				if (itr.hasNext()) {
@@ -149,7 +150,8 @@ public class StringVisitor implements IniVisitor {
 				}
 			}
 			
-			sb.append(addBs(option.getName()) + " " + IniParserImpl.DELIM_OPTION + " " + value);
+			sb.append(addBs(option.getName()) + " " + 
+					IniParserImpl.DELIM_OPTION + " " + value);
 		} catch (Exception e) {
 		}
 	}
