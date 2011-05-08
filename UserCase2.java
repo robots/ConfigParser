@@ -52,20 +52,11 @@ public class UserCase2 {
 		
 		System.out.println("Default section created");
 		
-		//IniVisitor visitor = new PrintVisitor();
-		//StringVisitor sv = new StringVisitor();
-		//iniP.accept(visitor);
-		//iniP.accept(sv);
-
 		try {
 			iniP.readFile("test.ini");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		StringVisitor sv = new StringVisitor();
-		//iniP.accept(sv);
-		//iniP.accept(visitor);
 
 		try {
 			iniP.writeFile("output.ini");
@@ -73,7 +64,7 @@ public class UserCase2 {
 			e.printStackTrace();
 		}
 
-		//System.out.print(sv.getString());
+
 	}
 
 }
