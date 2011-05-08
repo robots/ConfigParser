@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -747,7 +746,7 @@ public class IniOption {
 			listVal = defaultValueList;
 
 		LinkedList<Element> output = new LinkedList<Element>();
-		ListIterator itr = listVal.listIterator();
+		ListIterator<Element> itr = listVal.listIterator();
 
 		// solve references in list
 		while (itr.hasNext()) {
