@@ -53,9 +53,9 @@ public class MainTest {
 		System.out.println("Default section created");
 		
 		IniVisitor visitor = new PrintVisitor();
-		StringVisitor sv = new StringVisitor();
+		//StringVisitor sv = new StringVisitor();
 		iniP.accept(visitor);
-		iniP.accept(sv);
+		//iniP.accept(sv);
 
 		try {
 			iniP.readFile("test.ini");
@@ -63,6 +63,8 @@ public class MainTest {
 			e.printStackTrace();
 		}
 
+		StringVisitor sv = new StringVisitor();
+		iniP.accept(sv);
 		iniP.accept(visitor);
 
 		try {

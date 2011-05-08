@@ -39,6 +39,7 @@ public class StringVisitor implements IniVisitor {
 
 	@Override
 	public void visit(IniParserImpl parser) {
+		addPriorComment(parser.getClosingComments());
 	}
 
 	@Override

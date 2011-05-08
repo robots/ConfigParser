@@ -419,12 +419,12 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public void accept(IniVisitor visitor) {
-		visitor.visit(this);
-
 		for( IniSection section : sectionList)
 		{
 			section.accept(visitor);
 		}
+		
+		visitor.visit(this);
 	}
 
 	@Override
@@ -504,9 +504,8 @@ public class IniParserImpl implements IniParser {
 	}
 
 	private void parseFinish(boolean fail) {
-		if (!fail) {
 			this.setClosingComments(parsedCommentsList);
-		}
+
 
 		parsedSection = null;
 		parsedCommentsList = null;
