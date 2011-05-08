@@ -4,6 +4,7 @@
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -685,8 +686,22 @@ public class IniOption {
 		
 		if(listVal== null)
 			listVal = defaultValueList;
+
+		LinkedList<Element> output = new LinkedList<Element>();
+		ListIterator itr = listVal.listIterator();
+
+		// solve references in list
+		while (itr.hasNext()) {
+			Element elem = (Element)itr.next();
+			
+			if (elem.isReference()) {
+				output.add(new Element(solveReference(elem)));
+			} else {
+				output.add(elem);
+			}
+		}
 		
-		return listVal;
+		return output;
 		
 	}
 	
