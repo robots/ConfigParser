@@ -12,13 +12,13 @@ public interface IniVisitor {
 	 * Navstiveni parseru
 	 * @param parser navstevovany parser
 	 */
-	public void visit(IniParserImpl parser);
+	public void visit(IniParser parser);
 	
 	/**
 	 * Navstiveni sekce
 	 * @param section navstevovana sekce
 	 */
-	public void visit(IniSectionImpl section);
+	public void visit(IniSection section);
 	
 	/**
 	 * Navstiveni volby

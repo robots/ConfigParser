@@ -328,7 +328,7 @@ public class IniOption {
 	public String getValueEnum() throws BadTypeException, IniAccessException {
 		if(this.type != OptionType.ENUM)
 			throw new BadTypeException("Requested option is not of type Enum");
-		// TODO check enum value
+
 		return this.getValue();
 	}
 	

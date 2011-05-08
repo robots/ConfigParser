@@ -38,12 +38,12 @@ public class StringVisitor implements IniVisitor {
 	}
 
 	@Override
-	public void visit(IniParserImpl parser) {
+	public void visit(IniParser parser) {
 		addPriorComment(parser.getClosingComments());
 	}
 
 	@Override
-	public void visit(IniSectionImpl section) {
+	public void visit(IniSection section) {
 		sb.append("\n\n");
 
 		addPriorComment(section.getPriorComments());

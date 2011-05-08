@@ -2,14 +2,14 @@
 public class PrintVisitor implements IniVisitor {
 
 	@Override
-	public void visit(IniParserImpl parser) {
+	public void visit(IniParser parser) {
 		System.out.println("Visiting Parser");
 		System.out.println();
 
 	}
 
 	@Override
-	public void visit(IniSectionImpl section) {
+	public void visit(IniSection section) {
 		System.out.println("Visiting Section: " + section.getName());
 	}
 
