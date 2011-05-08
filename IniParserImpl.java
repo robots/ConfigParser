@@ -82,12 +82,14 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public IniSection addSection(String sectionName) {
+	public IniSection addSection(String sectionName) throws BadValueException {
+		
+		if(getSection(sectionName, false) != null)
+			throw new BadValueException("Section " + sectionName + " already exists");
+		
 		IniSection section = new IniSectionImpl(sectionName, this);
 		sectionList.add(section);
 
-		// TODO check na unikatnost sekce
-		
 		return section;
 	}
 
@@ -142,8 +144,13 @@ public class IniParserImpl implements IniParser {
 	protected IniSection getSection(String sectionName, boolean autoCreate) {
 		IniSection section = findSection(sectionName);
 
+		
 		if(autoCreate && (section == null))
-			section = addSection(sectionName);
+			try {
+				section = addSection(sectionName);
+			} catch (BadValueException e) {
+				System.err.println(e.toString());				
+			}
 
 		return section;
 	}
@@ -472,13 +479,8 @@ public class IniParserImpl implements IniParser {
 		opt.setValue(value);
 	}
 
-	/**
-	 * Nalezme volbu podle zadaneho nazvu sekce a volby
-	 * @param sectionName nazev sekce
-	 * @param option nazev volby
-	 * @return hledana volba, nebo null pokud neexistuje
-	 */
-	protected IniOption getOption(String sectionName, String option)
+	@Override
+	public IniOption getOption(String sectionName, String option)
 	{
 		return getSection(sectionName).getOption(option);
 	}

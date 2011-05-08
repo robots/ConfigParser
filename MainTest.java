@@ -31,11 +31,11 @@ public class MainTest {
 		
 		iniP.createEnumType("EnumT", enumVal);
 		
-		
-		IniSection section = iniP.addSection("Default");
-		section.defineOptBoolean("defBool", true);
+		IniSection section = null;
 		try{
-			section.defineOptEnum("defEnum", "EnumT", "A");
+		section = iniP.addSection("Default");
+		section.defineOptBoolean("defBool", true);
+		section.defineOptEnum("defEnum", "EnumT", "A");
 		}catch( Exception e) { System.out.println(e.toString()); }
 		section.defineOptFloat("defFloat", 1.0f);
 		section.defineOptListBoolean("defListBool", ':', listBool);

@@ -690,12 +690,18 @@ public class IniOption {
 	}
 	
 	/**
-	 * 
-	 * @param element
-	 * @return
+	 * Resi referencovane hodnoty volby. V pripade ze element neobsahuje odkaz
+	 * vrati jeho primou hodnotu. V pripade ze obsahuje odkaz, nahradi tento
+	 * odkaz skutecnou hodnotou;
+	 * @param element Zkoumana hodnota volby
+	 * @return hodnota elementu s nahrazenymi pripadnymi referencemi
 	 */
 	private String solveReference(Element element)
 	{
+		if(element == null)
+			return null;
+		
+		// Pokud element neni referencovany, vratime primo hodnotu
 		if(! element.isReference())
 			return element.getValue();
 		
@@ -707,36 +713,32 @@ public class IniOption {
 		Pattern referencePattern = Pattern.compile(Patterns.PATTERN_REFER);
 		Matcher referenceMatcher = referencePattern.matcher(element.getValue());
 		
-		if(referenceMatcher.find())
-			reference = referenceMatcher.group();
+		// Urcite nalezne - element je referencovany
+		referenceMatcher.find();
+		reference = referenceMatcher.group();
 		
-		if(reference == null)
-			return element.getValue();
-		
-		
-		// Skip initial ${
+		// Skip initial "${"
 		reference = reference.substring(2);
 		
+		// prepare matching of identifiers 
 		Pattern p_id = Pattern.compile(Patterns.PATTERN_ID);
 	    Matcher m1 = p_id.matcher(reference);
 	    
 	    MatchResult res = null;
 
-	    // TODO Does not work propely !!!!!!   
-	    
-	    // Find referenced section name
+	    // Find first identifier = section name
 	    if(m1.find()) {
 	    	res = m1.toMatchResult();
 	    	referencedSection = res.group();
 	    }
 	     
-	    // Find referenced option name
+	    // Find second identifier = option name
 	    if(m1.find()) {
 	    	res = m1.toMatchResult();
 	    	referencedOption = res.group();
 	    }
 	       
-	    System.out.println("Found reference section: " + referencedSection + " option: " + referencedOption);
+System.out.println("Found reference section: " + referencedSection + " option: " + referencedOption);
 	    // Find referenced value
 	    String referencedValue = parser.getUntyped(referencedSection, referencedOption);
 	    
@@ -745,4 +747,96 @@ public class IniOption {
 	    
 	    return dereferencedValue;
 	}
+	
+	/**
+	 * Nastavi hodnoty list-volby ze zadaneho pole hodnot. Provadi se kontrola podle typu.	
+	 * @param values pole nastavovanych hodnot
+	 * @throws BadTypeException V pripade pouziti na nespravny typ volby 
+	 * @throws IniAccessException V pripade pouziti na jednohodotovou volbu
+	 * @throws BadValueException V pripade nastavovani zapornych hodnot do UNSIGNED volby
+	 */
+	public void setListValue(BigInteger[] values) throws BadTypeException, IniAccessException, BadValueException {
+		
+		if((getType() != OptionType.SIGNED) && (getType() != OptionType.UNSIGNED))
+			throw new BadTypeException("Assigning integer values to " + getType() + " option");
+		
+		
+		List<Element> elementList = new LinkedList<Element>();
+		
+		for(BigInteger value : values) {
+			if((getType() == OptionType.UNSIGNED) && (value.signum() == -1))
+				throw new BadValueException("Assigning negative value to unsigned type");
+				
+			Element element = new Element(value.toString());
+			elementList.add(element);
+		}
+		
+		this.setElementList(elementList);
+	}
+	
+	/**
+	 * Nastavi hodnoty list-volby ze zadaneho pole hodnot. Provadi se kontrola podle typu.	
+	 * @param values pole nastavovanych hodnot
+	 * @throws BadTypeException V pripade pouziti na nespravny typ volby 
+	 * @throws IniAccessException V pripade pouziti na jednohodotovou volbu
+	 * @throws BadValueException V pripade nastavovani neplatnych hodnot do ENUM volby
+	 */
+	public void setListValue(String[] values) throws BadTypeException, IniAccessException, BadValueException {
+		if((getType() != OptionType.STRING) && (getType() != OptionType.ENUM))
+			throw new BadTypeException("Assigning string values to " + getType() + " option");		
+		
+		List<Element> elementList = new LinkedList<Element>();
+		
+		for(String value : values) {
+			if((getType() == OptionType.ENUM) && (!parser.isValidForEnum(enumName, value)))
+				throw new BadValueException("Assigning value: " + value + " to enum " + enumName);
+				
+			Element element = new Element(value);
+			elementList.add(element);
+		}
+		
+		this.setElementList(elementList);
+	}
+	
+	/**
+	 * Nastavi hodnoty list-volby ze zadaneho pole hodnot. Provadi se kontrola podle typu.	
+	 * @param values pole nastavovanych hodnot
+	 * @throws BadTypeException V pripade pouziti na nespravny typ volby 
+	 * @throws IniAccessException V pripade pouziti na jednohodotovou volbu
+	 */
+	public void setListValue(float[] values) throws BadTypeException, IniAccessException {
+		if(getType() != OptionType.FLOAT)
+			throw new BadTypeException("Assigning float values to " + getType() + " option");		
+		
+		List<Element> elementList = new LinkedList<Element>();
+		
+		for(float value : values) {
+			Element element = new Element(Float.toString(value));
+			elementList.add(element);
+		}
+		
+		this.setElementList(elementList);
+	}
+	
+	/**
+	 * Nastavi hodnoty list-volby ze zadaneho pole hodnot. Provadi se kontrola podle typu.	
+	 * @param values pole nastavovanych hodnot
+	 * @throws BadTypeException V pripade pouziti na nespravny typ volby 
+	 * @throws IniAccessException V pripade pouziti na jednohodotovou volbu
+	 */
+	public void setListValue(boolean[] values) throws BadTypeException, IniAccessException {
+		if(getType() != OptionType.BOOLEAN)
+			throw new BadTypeException("Assigning boolean values to " + getType() + " option");		
+		
+		List<Element> elementList = new LinkedList<Element>();
+		
+		for(boolean value : values) {
+			Element element = new Element(Boolean.toString(value));
+			elementList.add(element);
+		}
+		
+		this.setElementList(elementList);
+	}
+	
+	
 }

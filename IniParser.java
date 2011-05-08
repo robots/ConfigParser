@@ -126,6 +126,13 @@ public interface IniParser {
 	 */
 	public String getUntyped(String sectionName, String option);
 
+	/**
+	 * Nalezeni volby podle nazvu sekce a nazvu volby
+	 * @param sectionName nazev sekce do ktere volba patri
+	 * @param option nazev hledane volby
+	 * @return hledana volba, nebo null pokud neexistuje
+	 */
+	public IniOption getOption(String sectionName, String option);
 	
 	/**
 	 * Nastaveni hodnoty volbe typu string
@@ -417,8 +424,9 @@ public interface IniParser {
 	 * Vytvori skeci prislusneho nazvu
 	 * @param sectionName nazev sekce
 	 * @return vytvorena sekce
+	 * @throws BadValueException V pripade ze vytvarena sekce uz existuje
 	 */
-	public IniSection addSection(String sectionName);
+	public IniSection addSection(String sectionName) throws BadValueException;
 	
 	/**
 	 * Najde sekci podle zadaneho nazvu sekce

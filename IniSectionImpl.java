@@ -203,14 +203,6 @@ public class IniSectionImpl implements IniSection {
 		return opt;
 	}
 
-	/*
-	 * @Override public IniOption defineOptList(String option, String code, char
-	 * delim) { // TODO Auto-generated method stub return null; }
-	 * 
-	 * @Override public IniOption defineOptList(String option, String code, char
-	 * delim, List<String> defaultValues) { // TODO Auto-generated method stub
-	 * return null; }
-	 */
 	@Override
 	public IniOption defineOptListBoolean(String option, char delimiter) {
 		IniOption opt = new IniOption(option, OptionType.BOOLEAN, true, parser, true);
