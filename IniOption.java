@@ -766,43 +766,32 @@ public class IniOption {
 		String referencedOption = null;
 		
 		// Find the reference-part of value
-		String reference = null;
-		Pattern referencePattern = Pattern.compile(Patterns.PATTERN_REFER);
-		Matcher referenceMatcher = referencePattern.matcher(element.getValue());
+		Pattern refPattern = Pattern.compile(Patterns.PATTERN_ID);
+		Matcher refMatcher = refPattern.matcher(element.getValue().substring(1));
 		
-		// Urcite nalezne - element je referencovany
-		referenceMatcher.find();
-		reference = referenceMatcher.group();
-		
-		// Skip initial "${"
-		reference = reference.substring(2);
-		
-		// prepare matching of identifiers 
-		Pattern p_id = Pattern.compile(Patterns.PATTERN_ID);
-	    Matcher m1 = p_id.matcher(reference);
-	    
-	    MatchResult res = null;
+		// Find first identifier = section name
+		if (!refMatcher.find()) {
+			System.err.println("Fatal error");
+		}
 
-	    // Find first identifier = section name
-	    if(m1.find()) {
-	    	res = m1.toMatchResult();
-	    	referencedSection = res.group();
-	    }
-	     
-	    // Find second identifier = option name
-	    if(m1.find()) {
-	    	res = m1.toMatchResult();
-	    	referencedOption = res.group();
-	    }
+		referencedSection = refMatcher.toMatchResult().group();
+	
+		// Find second identifier = option name
+		if (!refMatcher.find()) {
+			System.err.println("Fatal error");
+		}
+
+		referencedOption = refMatcher.toMatchResult().group();
 	       
 System.out.println("Found reference section: " + referencedSection + " option: " + referencedOption);
-	    // Find referenced value
-	    String referencedValue = parser.getUntyped(referencedSection, referencedOption);
+
+		// Find referenced value
+		String referencedValue = parser.getUntyped(referencedSection, referencedOption);
 	    
-	    // Replace reference with value
-	    String dereferencedValue = element.getValue().replace("${"+referencedSection+"#"+referencedOption+"}", referencedValue);
+		// Replace reference with value
+		String dereferencedValue = element.getValue().replace("${"+referencedSection+"#"+referencedOption+"}", referencedValue);
 	    
-	    return dereferencedValue;
+		return dereferencedValue;
 	}
 	
 	/**
