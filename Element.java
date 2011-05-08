@@ -12,9 +12,6 @@ public class Element {
 	 */
 	private String value;
 	
-	private String referencedSection;
-	private String referencedOption;
-	
 	public Element() {}
 	
 	/**

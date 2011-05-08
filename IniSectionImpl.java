@@ -1,9 +1,7 @@
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Trida implementujici interface IniSection
@@ -456,20 +454,8 @@ public class IniSectionImpl implements IniSection {
 
 	@Override
 	public IniOption getOption(String option) {
-	/*
-		// Nalezeni volby
-		int index = optionList.indexOf(option);
-		
-		// Pokud takova volba neni, vratit null
-		if(index == -1)
-			return null;
-		
-		// Vratit volbu
-		IniOption opt = optionList.get(index);
 
-		return opt;
-		*/
-		ListIterator itr = optionList.listIterator();
+		ListIterator<IniOption> itr = optionList.listIterator();
 
 		while (itr.hasNext()) {
 			IniOption opt = (IniOption)itr.next();
