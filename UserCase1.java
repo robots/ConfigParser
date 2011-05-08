@@ -14,6 +14,7 @@ public class UserCase1 {
 		IniParser iniP = new IniParserImpl();
 		
 		IniSection section = null;
+		// define config file structure
 		try{
 			section = iniP.addSection("Database");
 
@@ -42,10 +43,10 @@ public class UserCase1 {
 
 
 		try {
-		// access parsed data
-		iniP.getSection("Database").getOption("user").getValueString();
-		iniP.getSection("Database").getOption("pass").getValueString();
-		iniP.getSection("Database").getOption("secure").getValueBool();
+			// access parsed data
+			iniP.getSection("Database").getOption("user").getValueString();
+			iniP.getSection("Database").getOption("pass").getValueString();
+			iniP.getSection("Database").getOption("secure").getValueBool();
 		} catch (IniException e) {
 			System.err.println(e.toString());
 		}
