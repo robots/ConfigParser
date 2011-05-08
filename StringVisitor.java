@@ -73,6 +73,9 @@ public class StringVisitor implements IniVisitor {
 	
 	private void visitSingleValueOption(IniOption option)
 	{
+		if(!option.hasDefinedValue()) 
+			return;
+		
 		try {
 			String value = option.getValue();
 
@@ -83,6 +86,9 @@ public class StringVisitor implements IniVisitor {
 
 	private void visitListValueOption(IniOption option)
 	{
+		if(!option.hasDefinedValue()) 
+			return;
+		
 		try {
 			String value = "";
 			List<Element> listElem = option.getValueList();

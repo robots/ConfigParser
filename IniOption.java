@@ -659,4 +659,17 @@ public class IniOption {
 	public List<String> getPriorComments() {
 		return priorComments;
 	}
+	
+	/**
+	 * Zjisti, zda byla hodnota volby uvedena v puvodnim ini souboru,
+	 * nebo zda se pouziva defaultni hodnota
+	 * @return true, pokud byla hodnota definovana, false jinak
+	 */
+	public boolean hasDefinedValue()
+	{
+		if(valueList == null)
+			return false;
+		
+		return true;
+	}
 }
