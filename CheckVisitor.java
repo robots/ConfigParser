@@ -11,6 +11,12 @@ public class CheckVisitor implements IniVisitor {
 	private boolean checkOK = true;
 	private IniSection lastSection = null;
 
+	/**
+	 * Zjisti, zda byly po pruchodu strukturou splneny pozadavky na pritomnost
+	 * mandatory voleb
+	 * @return true, pokud byly pozadavky na mandatory polozky splneny
+	 * false jinak
+	 */
 	public boolean isOK() {
 		return checkOK;
 	}

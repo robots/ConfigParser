@@ -5,5 +5,19 @@
  *
  */
 public enum ParserAttitude {
-	UNDEF, STRICT, RELAXED
+	
+	/**
+	 * Nedefinovany rezim - nemelo by nastat
+	 */
+	UNDEF, 
+	
+	/**
+	 * Striktni rezim
+	 */
+	STRICT, 
+	
+	/**
+	 * Volny rezim
+	 */
+	RELAXED
 }
