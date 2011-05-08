@@ -1,4 +1,13 @@
 
+/**
+ * Konkretni implementace interface IniVisitor.
+ * 
+ * Ukazka implementacie IniVisitor-a na kontrolu/spracovanie
+ * konfiguracneho stromu
+ *
+ * @author Vladimir Fiklik, Michal Demin
+ *
+ */
 public class PrintVisitor implements IniVisitor {
 
 	@Override
