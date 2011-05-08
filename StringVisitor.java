@@ -2,7 +2,11 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-
+/**
+ * Konkretni implementace interface IniVisitor
+ * @author Vladimir Fiklik, Michal Demin
+ *
+ */
 public class StringVisitor implements IniVisitor {
 	private StringBuilder sb;
 
@@ -11,11 +15,19 @@ public class StringVisitor implements IniVisitor {
 		sb = new StringBuilder();
 	}
 
+	/**
+	 * Vrati vygenerovany obsah konfiguracneho suboru. 
+	 * @return obsah konfiguracneho suboru
+	 */
 	public String getString()
 	{
 		return sb.toString();
 	}
 
+	/**
+	 * Prida komentare na koniec obsahu.
+	 * @param comments zoznam komentarov
+	 */
 	private void addPriorComment(List<String> comments)
 	{
 		if ((comments == null) || (comments.isEmpty())) {
@@ -29,6 +41,10 @@ public class StringVisitor implements IniVisitor {
 		}
 	}
 
+	/**
+	 * Prida inline komentar k danemu riadku.
+	 * @param comment text komentaru
+	 */
 	private void addInlineComment(String comment)
 	{
 		if ((comment == null) || (comment.length() == 0))
@@ -37,13 +53,25 @@ public class StringVisitor implements IniVisitor {
 		sb.append(" " + IniParserImpl.DELIM_COMENT + " " + comment);
 	}
 
+	/**
+	 * Metoda volana pri navstiveni "IniParseru".
+	 * Prida komentar, z parseru.
+	 * @param parser referencia na parser
+	 */
 	@Override
-	public void visit(IniParserImpl parser) {
+	public void visit(IniParserImpl parser)
+	{
 		addPriorComment(parser.getClosingComments());
 	}
 
+	/**
+	 * Metoda volana pri navstiveni "IniSection".
+	 * Prida hlavicku sekcie + inline komentar, a komentare pred sekciou
+	 * @param section referencia na IniSection
+	 */
 	@Override
-	public void visit(IniSectionImpl section) {
+	public void visit(IniSectionImpl section)
+	{
 		sb.append("\n\n");
 
 		addPriorComment(section.getPriorComments());
@@ -55,9 +83,15 @@ public class StringVisitor implements IniVisitor {
 		sb.append("\n");
 	}
 
+	/**
+	 * Metoda volana pri navstiveni "IniSection".
+	 * Prida riadok s volbou, jej hodnotu/hodnoty, inline komentar
+	 * a komentare pred
+	 * @param option referencia na IniOption
+	 */
 	@Override
-	public void visit(IniOption option) {
-
+	public void visit(IniOption option)
+	{
 		addPriorComment(option.getPriorComments());
 
 		if(option.isList())
@@ -71,6 +105,11 @@ public class StringVisitor implements IniVisitor {
 		sb.append("\n");
 	}
 	
+	/**
+	 * Metoda volana pri skalarnej hodnote.
+	 * Vypise sa hodnota prvku
+	 * @param option referencia na IniOption
+	 */
 	private void visitSingleValueOption(IniOption option)
 	{
 		if(!option.hasDefinedValue()) 
@@ -84,6 +123,11 @@ public class StringVisitor implements IniVisitor {
 		}
 	}
 
+	/**
+	 * Metoda volana pri zozname hodnot.
+	 * Vypisu sa hodnoty prvkov oddelene spravnym oddelovacom.
+	 * @param option referencia na IniOption
+	 */
 	private void visitListValueOption(IniOption option)
 	{
 		if(!option.hasDefinedValue()) 
@@ -109,6 +153,11 @@ public class StringVisitor implements IniVisitor {
 		}
 	}
 
+	/**
+	 * Metoda prida backslash pred kazdu medzeru vstupneho stringu.
+	 * @param input vstupny retazec.
+	 * @return backslashovany vystup
+	 */
 	private String addBs(String input)
 	{
 		String output = new String();
