@@ -12,7 +12,8 @@ public interface IniParser {
 	/**
 	 * Nastaveni rezimu prace s ini souborem 
 	 * STRICT - obsah souboru musi presne odpovidat definici
-	 * RELAXED - u znamych optionu probiha kontrola, nezname se povazuji za string
+	 * RELAXED - u znamych optionu probiha kontrola, nezname se povazuji 
+	 * za string
 	 * @param attitude rezim prace 
 	 */
 	public void setAttitude(ParserAttitude attitude);
@@ -39,7 +40,8 @@ public interface IniParser {
 	 * @throws IOException V pripade chyby cteni
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void readStream(InputStream inStream) throws IOException, ParserException;
+	public void readStream(InputStream inStream) 
+		throws IOException, ParserException;
 	
 	/**
 	 * Zapis konfigurace do streamu
@@ -47,7 +49,8 @@ public interface IniParser {
 	 * @throws IOException V pripade chyby zapisu
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeStream(OutputStream outStream) throws IOException, ParserException;
+	public void writeStream(OutputStream outStream) 
+		throws IOException, ParserException;
 	
 	/**
 	 * Cteni konfigurace ze stringu
@@ -94,7 +97,8 @@ public interface IniParser {
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptString(String sectionName, String option, String defaultValue);
+	public IniOption defineOptString(String sectionName, String option, 
+			String defaultValue);
 	
 	/**
 	 * Definice existence volby typu boolean
@@ -111,7 +115,8 @@ public interface IniParser {
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptBoolean(String sectionName, String option, boolean defaultValue);
+	public IniOption defineOptBoolean(String sectionName, String option, 
+			boolean defaultValue);
 	
 	/**
 	 * Definice existence volby typu float
@@ -128,7 +133,8 @@ public interface IniParser {
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptFloat(String sectionName, String option, float defaultValue);
+	public IniOption defineOptFloat(String sectionName, String option, 
+			float defaultValue);
 	
 	/**
 	 * Definice existence volby typu signed
@@ -145,7 +151,8 @@ public interface IniParser {
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptSigned(String sectionName, String option, BigInteger defaultValue);
+	public IniOption defineOptSigned(String sectionName, String option, 
+			BigInteger defaultValue);
 	
 	/**
 	 * Definice existence volby typu unsigned
@@ -156,13 +163,15 @@ public interface IniParser {
 	public IniOption defineOptUnsigned(String sectionName, String option);
 	
 	/**
-	 * Definice existence volby typu unsigned a nastaveni jeji defaultni hodnoty
+	 * Definice existence volby typu unsigned a nastaveni jeji 
+	 * defaultni hodnoty
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptUnsigned(String sectionName, String option, BigInteger defaultValue);
+	public IniOption defineOptUnsigned(String sectionName, String option, 
+			BigInteger defaultValue);
 	
 	/**
 	 * Definice existence volby typu enum
@@ -171,7 +180,8 @@ public interface IniParser {
 	 * @param enumName Nazev vyctoveho typu, do nehoz patri hodnoty volby
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptEnum(String sectionName, String option, String enumName);
+	public IniOption defineOptEnum(String sectionName, String option, 
+			String enumName);
 	
 	/**
 	 * Definice existence volby typu enum a nastaveni jeji defaultni hodnoty
@@ -180,127 +190,160 @@ public interface IniParser {
 	 * @param enumName Nazev vyctoveho typu, do nehoz patri hodnoty volby
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
-	 * @throws BadValueException V pripade ze default hodnota nepatri do prislusneho vyctoveho typu
+	 * @throws BadValueException V pripade ze default hodnota nepatri do 
+	 * prislusneho vyctoveho typu
 	 */
-	public IniOption defineOptEnum(String sectionName, String option, String enumName, String defaultValue) throws BadValueException;
+	public IniOption defineOptEnum(String sectionName, String option, 
+			String enumName, String defaultValue) throws BadValueException;
 
 	
 	/**
 	 * Definice existence list-volby typu string
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu. Pripustne hodnoty 
+	 * ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListString(String sectionName, String option, char delimiter);
+	public IniOption defineOptListString(String sectionName, String option, 
+			char delimiter);
 	
 	/**
-	 * Definice existence list-volby typu string a nastaveni jejich defaultnich hodnot
+	 * Definice existence list-volby typu string a nastaveni jejich defaultnich 
+	 * hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListString(String sectionName, String option, char delimiter, List<String> defaultValue);
+	public IniOption defineOptListString(String sectionName, String option, 
+			char delimiter, List<String> defaultValue);
 	
 	/**
 	 * Definice existence list-volby typu boolean
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListBoolean(String sectionName, String option, char delimiter);
+	public IniOption defineOptListBoolean(String sectionName, String option, 
+			char delimiter);
 	
 	/**
-	 * Definice existence list-volby typu boolean a nastaveni jejich defaultnich hodnot
+	 * Definice existence list-volby typu boolean a nastaveni jejich 
+	 * defaultnich hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListBoolean(String sectionName, String option, char delimiter, List<Boolean> defaultValue);
+	public IniOption defineOptListBoolean(String sectionName, String option, 
+			char delimiter, List<Boolean> defaultValue);
 	
 	/**
 	 * Definice existence list-volby typu float
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListFloat(String sectionName, String option, char delimiter);
+	public IniOption defineOptListFloat(String sectionName, String option, 
+			char delimiter);
 	
 	/**
-	 * Definice existence list-volby typu float a nastaveni jejich defaultnich hodnot
+	 * Definice existence list-volby typu float a nastaveni jejich 
+	 * defaultnich hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListFloat(String sectionName, String option, char delimiter, List<Float> defaultValue);
+	public IniOption defineOptListFloat(String sectionName, String option, 
+			char delimiter, List<Float> defaultValue);
 	
 	/**
 	 * Definice existence list-volby typu signed
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListSigned(String sectionName, String option, char delimiter);
+	public IniOption defineOptListSigned(String sectionName, String option, 
+			char delimiter);
 	
 	/**
 	 * Definice existence list-volby typu signed a nastaveni jejich defaultnich hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListSigned(String sectionName, String option, char delimiter, List<BigInteger> defaultValue);
+	public IniOption defineOptListSigned(String sectionName, String option, 
+			char delimiter, List<BigInteger> defaultValue);
 	
 	/**
 	 * Definice existence list-volby typu unsigned
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListUnsigned(String sectionName, String option, char delimiter);
+	public IniOption defineOptListUnsigned(String sectionName, String option, 
+			char delimiter);
 	
 	/**
-	 * Definice existence list-volby typu unsigned a nastaveni jejich defaultnich hodnot
+	 * Definice existence list-volby typu unsigned a nastaveni jejich 
+	 * defaultnich hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListUnsigned(String sectionName, String option, char delimiter, List<BigInteger> defaultValue);
+	public IniOption defineOptListUnsigned(String sectionName, String option, 
+			char delimiter, List<BigInteger> defaultValue);
 	
 	/**
 	 * Definice existence list-volby typu enum
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
 	 * @param enumName Nazev vyctoveho typu, do nehoz patri hodnoty volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @return vytvorena volba
 	 */
-	public IniOption defineOptListEnum(String sectionName, String option, String enumName, char delimiter);
+	public IniOption defineOptListEnum(String sectionName, String option, 
+			String enumName, char delimiter);
 	
 	/**
-	 * Definice existence list-volby typu enum a nastaveni jejich defaultnich hodnot
+	 * Definice existence list-volby typu enum a nastaveni jejich 
+	 * defaultnich hodnot
 	 * @param sectionName Nazev sekce do niz volba patri
 	 * @param option Nazev volby
 	 * @param enumName Nazev vyctoveho typu, do nehoz patri hodnoty volby
-	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne hodnoty ',' a ':'
+	 * @param delimiter oddelovac jednotlivych prvku seznamu - pripustne 
+	 * hodnoty ',' a ':'
 	 * @param defaultValue defaultni hodnota
 	 * @return vytvorena volba
-	 * @throws BadValueException V pripade ze default hodnoty nepatri do prislusneho vyctoveho typu
+	 * @throws BadValueException V pripade ze default hodnoty nepatri do 
+	 * prislusneho vyctoveho typu
 	 */
-	public IniOption defineOptListEnum(String sectionName, String option, String enumName, char delimiter, List<String> defaultValue) throws BadValueException;
+	public IniOption defineOptListEnum(String sectionName, String option, 
+			String enumName, char delimiter, List<String> defaultValue) 
+			throws BadValueException;
 
 	/**
 	 * Vytvori skeci prislusneho nazvu
@@ -341,7 +384,8 @@ public interface IniParser {
 	/**
 	 * Zjisteni komentaru na konci ini souboru, ktere neprislusi zadne sekci
 	 * Kazda radka je ulozena v samostatnem stringu.
-	 * @return Seznam komentaru na konci souboru nebo null, pokud takove neexistuji
+	 * @return Seznam komentaru na konci souboru nebo null, pokud takove 
+	 * neexistuji
 	 */
 	public List<String> getClosingComments();
 	
