@@ -64,12 +64,6 @@ public class IniParserImpl implements IniParser {
 	private ParserAttitude parserAttitude = ParserAttitude.UNDEF;
 	private LinkedList<String> parsedCommentsList = null;
 	private String parsedInlineComment = null;
-
-	public static final String PATTERN_ID = "[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*";
-	public static final String PATTERN_ID_STRICT = "^[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*$";
-	public static final String PATTERN_REFER = "\\$\\{" + PATTERN_ID + "\\#" + PATTERN_ID + "\\}";
-	public static final String PATTERN_SECTION = "\\[[^\\]]*\\]"; 
-	public static final String PATTERN_SECTION_STRICT = "\\[[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*\\]";
 	
 	/**
 	 * Konstruktor, defaultni rezim STRICT
@@ -179,11 +173,22 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public String getUntyped(String sectionName, String option) throws BadTypeException, IniAccessException {
+	public String getUntyped(String sectionName, String option){
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
-		return opt.getValueUntyped();
+		//TODO what if referencing list?
+		
+		String value = null;
+		
+		try {
+			value = opt.getValueUntyped();
+		} catch (IniAccessException e)
+		{
+			System.err.println(e.toString());
+		}
+			
+		return value;
 	}
 
 
@@ -615,7 +620,7 @@ public class IniParserImpl implements IniParser {
 
 		parsedInlineComment = strComment;
 
-		Pattern patSection = Pattern.compile(IniParserImpl.PATTERN_SECTION);
+		Pattern patSection = Pattern.compile(Patterns.PATTERN_SECTION);
 		Matcher matSection = patSection.matcher(input);
 
 		boolean fail = false;
@@ -631,7 +636,7 @@ public class IniParserImpl implements IniParser {
 	}
 
 	private boolean parseSection(String input) {
-		Pattern patId = Pattern.compile(IniParserImpl.PATTERN_ID);
+		Pattern patId = Pattern.compile(Patterns.PATTERN_ID);
 		Matcher m = patId.matcher(input);
 
 		if (!m.find()) {
@@ -670,7 +675,7 @@ public class IniParserImpl implements IniParser {
 			return false;
 		}
 
-		Pattern patId = Pattern.compile(IniParserImpl.PATTERN_ID);
+		Pattern patId = Pattern.compile(Patterns.PATTERN_ID);
 		Matcher m_id = patId.matcher(parts[0]);
 
 		if (!m_id.find()) {

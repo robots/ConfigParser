@@ -123,10 +123,8 @@ public interface IniParser {
 	 * @param sectionName nazev sekce do ktere volba patri
 	 * @param option Nazev volby
 	 * @return hodnota volby
-	 * @throws BadTypeException V pripade pouziti na nespravny typ volby
-	 * @throws IniAccessException V pripade pouziti na list-volbu
 	 */
-	public String getUntyped(String sectionName, String option) throws BadTypeException, IniAccessException;
+	public String getUntyped(String sectionName, String option);
 
 	
 	/**

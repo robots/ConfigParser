@@ -12,6 +12,9 @@ public class Element {
 	 */
 	private String value;
 	
+	private String referencedSection;
+	private String referencedOption;
+	
 	public Element() {}
 	
 	/**
@@ -29,15 +32,15 @@ public class Element {
 	 * @return true, pokud je hodnota referencovana, false jinak
 	 */
 	public boolean isReference() {
-		Pattern p = Pattern.compile(IniParserImpl.PATTERN_REFER);
+		Pattern p = Pattern.compile(Patterns.PATTERN_REFER);
 		Matcher m = p.matcher(this.value);
 
 		if (m.find()) {
-			System.err.println(" ehe ");
+			//System.err.println(" ehe ");
 			return true;
 		}
 
-		System.err.println(" ee ");
+		//System.err.println(" ee ");
 		return false;
 	}
 
@@ -55,5 +58,7 @@ public class Element {
 	 */
 	public String getValue() {
 		return value;
+		
 	}
+	
 }

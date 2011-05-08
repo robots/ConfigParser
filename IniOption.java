@@ -4,6 +4,9 @@
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Trida reprezentujici jednu volbu v .ini souboru
@@ -605,7 +608,9 @@ public class IniOption {
 		if(listVal == null)
 			return null;
 		
-		return listVal.get(0).getValue();
+		Element elementValue = listVal.get(0);
+		
+		return solveReference(elementValue);
 		
 	}
 
@@ -682,5 +687,47 @@ public class IniOption {
 			return false;
 		
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param element
+	 * @return
+	 */
+	private String solveReference(Element element)
+	{
+		if(! element.isReference())
+			return element.getValue();
+		
+		String referencedSection = null;
+		String referencedOption = null;
+		
+		Pattern p_id = Pattern.compile(Patterns.PATTERN_ID);
+	    Matcher m1 = p_id.matcher(element.getValue());
+	    
+	    MatchResult res = null;
+
+	    // TODO Does not work propely !!!!!!   
+	    
+	    // Find referenced section name
+	    if(m1.find()) {
+	    	res = m1.toMatchResult();
+	    	referencedSection = res.group();
+	    }
+	     
+	    // Find referenced option name
+	    if(m1.find()) {
+	    	res = m1.toMatchResult();
+	    	referencedOption = res.group();
+	    }
+	       
+	    System.out.println("Found reference section: " + referencedSection + " option: " + referencedOption);
+	    // Find referenced value
+	    String referencedValue = parser.getUntyped(referencedSection, referencedOption);
+	    
+	    // Replace reference with value
+	    String dereferencedValue = element.getValue().replace("{"+referencedSection+"#"+referencedOption+"}", referencedValue);
+	    
+	    return dereferencedValue;
 	}
 }

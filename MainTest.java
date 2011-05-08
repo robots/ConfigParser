@@ -52,9 +52,9 @@ public class MainTest {
 		
 		System.out.println("Default section created");
 		
-		IniVisitor visitor = new PrintVisitor();
+		//IniVisitor visitor = new PrintVisitor();
 		//StringVisitor sv = new StringVisitor();
-		iniP.accept(visitor);
+		//iniP.accept(visitor);
 		//iniP.accept(sv);
 
 		try {
@@ -64,8 +64,8 @@ public class MainTest {
 		}
 
 		StringVisitor sv = new StringVisitor();
-		iniP.accept(sv);
-		iniP.accept(visitor);
+		//iniP.accept(sv);
+		//iniP.accept(visitor);
 
 		try {
 			iniP.writeFile("output.ini");
@@ -73,7 +73,7 @@ public class MainTest {
 			e.printStackTrace();
 		}
 
-		System.out.print(sv.getString());
+		//System.out.print(sv.getString());
 	}
 
 }
