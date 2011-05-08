@@ -29,13 +29,15 @@ public class IniParserImpl implements IniParser {
 	 */
 	private List<String> closingComments;
 
-	private static final char CHAR_BACKSLASH = '\\';
-	private static final char CHAR_SPACE = ' ';
-	private static final char DELIM_COMENT = ';';
-	private static final char DELIM_OPTION = '=';
+	public static final char CHAR_BACKSLASH = '\\';
+	public static final char CHAR_SPACE = ' ';
+	public static final char DELIM_COMENT = ';';
+	public static final char DELIM_OPTION = '=';
 
 	private IniSection parsedSection = null;
 	private ParserAttitude parserAttitude = ParserAttitude.UNDEF;
+	private LinkedList<String> parsedCommentsList = null;
+	private String parsedInlineComment = null;
 
 	public static final String PATTERN_ID = "[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*";
 	public static final String PATTERN_ID_STRICT = "^[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*$";
@@ -451,6 +453,7 @@ public class IniParserImpl implements IniParser {
 	public void readString(String inString) {
 		BufferedReader reader = new BufferedReader(new StringReader(inString));
         
+		boolean fail = true;
 		try {
 			String line;
 			int linenum = 0;
@@ -461,8 +464,8 @@ public class IniParserImpl implements IniParser {
 					continue;
 				}
 
-				boolean ret = parseLine(line);
-				if (ret == false) {
+				fail = parseLine(line);
+				if (fail == false) {
 					if (this.parserAttitude == ParserAttitude.STRICT) {
 						System.out.println("Fatal error on line " + linenum);
 						break;
@@ -471,6 +474,8 @@ public class IniParserImpl implements IniParser {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			parseFinish(fail);
 		}
 
 	}
@@ -498,20 +503,40 @@ public class IniParserImpl implements IniParser {
 		return sv.getString();
 	}
 
-	private void parseReset() {
+	private void parseFinish(boolean fail) {
+		if (!fail) {
+			this.setClosingComments(parsedCommentsList);
+		}
+
 		parsedSection = null;
+		parsedCommentsList = null;
+		parsedInlineComment = "";
+	}
+
+	private void parseAddComment(String comment) {
+		if ((comment == null) || (comment.length() == 0)) {
+			return;
+		}
+
+		if (parsedCommentsList == null) {
+			parsedCommentsList = new LinkedList<String>();
+		}
+
+		System.out.println("Adding to list '" + comment + "'");
+		parsedCommentsList.add(comment);
 	}
 
 	private boolean parseLine(String input) {
-		String strComent = new String("");
+		String strComment = new String("");
 
 		int idxComent = input.indexOf(';');
 		if (idxComent != -1) {
-			strComent = input.substring(idxComent + 1).trim();
-System.out.println("komentar je '" + strComent + "'");
+			strComment = input.substring(idxComent + 1).trim();
+System.out.println("komentar je '" + strComment + "'");
 
 			if (idxComent == 0) {
 				// only comment on line
+				parseAddComment(strComment);
 				return true;
 			}
 
@@ -521,26 +546,32 @@ System.out.println("komentar je '" + strComent + "'");
 		input = trim_special(input);
 
 		if (input.length() == 0) {
-			if (strComent.length() != 0) {
+			if (strComment.length() != 0) {
 				// only comment
+System.out.println("test'" + parsedInlineComment + "'");
+				parseAddComment(strComment);
 				return true;
 			}
-
+System.out.println("zly test'" + parsedInlineComment + "'");
 			return false;
 		}
+
+		parsedInlineComment = strComment;
 
 		Pattern patSection = Pattern.compile(IniParserImpl.PATTERN_SECTION);
 		Matcher matSection = patSection.matcher(input);
 
+		boolean fail = false;
 		if (matSection.find()) {
 			String in_match = matSection.toMatchResult().group();
-			return parseSection(in_match);
+			fail = parseSection(in_match);
 		} else if (input.indexOf(DELIM_OPTION) != -1) {
-			return parseOption(input);
+			fail = parseOption(input);
 		}
 
-		System.out.println("Something feels wrong");
-		return false;
+System.out.println("test'" + parsedInlineComment + "'");
+		parseAddComment(parsedInlineComment);
+		return fail;
 	}
 
 	private boolean parseSection(String input) {
@@ -562,6 +593,12 @@ System.out.println(" Sekcia '" + sectionID + "'");
 			System.err.println("no such section defined - '" + sectionID + "'");
 			return false;
 		}
+
+		parsedSection.setPriorComments(parsedCommentsList);
+		parsedSection.setInlineComment(parsedInlineComment);
+
+		parsedCommentsList = null;
+		parsedInlineComment = "";
 
 		return true;
 	}
@@ -590,42 +627,48 @@ System.out.println(" Sekcia '" + sectionID + "'");
 			return false;
 		}
 
-		System.out.print("Option '" + optionID + "' = ");
-		IniOption iniOpt = parsedSection.getOption(optionID);
+System.out.print("Option '" + optionID + "' = ");
+		IniOption parsedOption = parsedSection.getOption(optionID);
 
-		if (iniOpt == null) {
+		if (parsedOption == null) {
 			System.err.println("no such option '" + optionID + "' defined in section '" + parsedSection.getName() + "'");
 			return false;
 		}
 
-		if (iniOpt.isList() == false) {
-			Element elem = new Element(optionValue);
-			System.out.println(" '" + optionValue + "' ");
+		parsedOption.setPriorComments(parsedCommentsList);
+if (parsedCommentsList != null) System.out.println("Adding comments '" + parsedCommentsList.toString());
+		parsedOption.setInlineComment(parsedInlineComment);
+		parsedCommentsList = null;
+		parsedInlineComment = "";
+
+		if (parsedOption.isList() == false) {
 			try {
-			iniOpt.setElement(elem);
-			} 
+				Element elem = new Element(optionValue);
+System.out.println(" '" + optionValue + "' ");
+				parsedOption.setElement(elem);
+			}
 			catch(IniException e) {
 				System.err.println(e.toString());
+				return false;
 			}
 		} else {
 			try {
-			String delim = Character.toString(iniOpt.getDelimiter());
-			
-			String[] values = optionValue.split(delim);
+				String delim = Character.toString(parsedOption.getDelimiter());
 
-			LinkedList<Element> listElem = new LinkedList<Element>();
+				String[] values = optionValue.split(delim);
 
-			for (String value : values) {
-				Element elem = new Element(value);
-
+				LinkedList<Element> listElem = new LinkedList<Element>();
+				for (String value : values) {
+					Element elem = new Element(value);
 System.out.println(" '" + value + "' ");
-				listElem.add(elem);
-			}
+					listElem.add(elem);
+				}
 
-			iniOpt.setElementList(listElem);
+				parsedOption.setElementList(listElem);
 			} 
 			catch(IniException e) {
 				System.err.println(e.toString());
+				return false;
 			}
 		}
 		return true;
@@ -646,11 +689,6 @@ System.out.println(" '" + value + "' ");
 				if (c == CHAR_SPACE) {
 					continue;
 				}
-/*
-				if ((c == DELIM_OPTION) || (c == DELIM_COMENT)) {
-					break;
-				}
-*/
 			}
 
 			isBS = false;
@@ -691,7 +729,7 @@ System.out.println(" '" + value + "' ");
 			if(section.getName().equals(sectionName))
 				return section;
 		}
-		
+
 		return null;
 	}
 }
