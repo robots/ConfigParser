@@ -12,7 +12,11 @@ public class UserCase2 {
 		
 		IniParser iniP = new IniParserImpl();
 		
+		//////////////////////////////////////////////////////////
+		// Priprava defaultnich hodnot - nezajimave
+		
 		String [] enumVal = {"A", "B" };
+		
 		List<Boolean> listBool = new LinkedList<Boolean>();
 		listBool.add(true);
 		listBool.add(false);
@@ -28,38 +32,42 @@ public class UserCase2 {
 		List<BigInteger> listBig = new LinkedList<BigInteger>();
 		listBig.add(new BigInteger("150"));
 		listBig.add(new BigInteger("151"));
-		
-		iniP.createEnumType("EnumT", enumVal);
+		//////////////////////////////////////////////////////////
 		
 		IniSection section = null;
-		try{
-		section = iniP.addSection("Default");
-		section.defineOptBoolean("defBool", true);
-		section.defineOptEnum("defEnum", "EnumT", "A");
-		}catch( Exception e) { System.out.println(e.toString()); }
-		section.defineOptFloat("defFloat", 1.0f);
-		section.defineOptListBoolean("defListBool", ':', listBool);
-		try{
-		section.defineOptListEnum("defListEnum", "EnumT", ':', listEnum);
-		}catch( Exception e) { System.out.println(e.toString()); }
-		section.defineOptListFloat("defListFloat", ',', listFloat);
-		section.defineOptListSigned("defListSigned", ':', listBig);
-		section.defineOptListString("defListString", ',', listEnum);
-		section.defineOptListUnsigned("defListUnsigned", ':', listBig);
-		section.defineOptSigned("defSigned", new BigInteger("-15"));
-		section.defineOptString("defString", "Ah oj");
-		section.defineOptUnsigned("defUnsigned", new BigInteger("20"));
 		
-		System.out.println("Default section created");
+		// Jednotlive definice
+		try{
+			
+			// Vytvoreni vyctoveho typu 
+			iniP.createEnumType("EnumT", enumVal);
+			
+			section = iniP.addSection("Default");
+			section.defineOptBoolean("defBool", true);
+			section.defineOptEnum("defEnum", "EnumT", "A"); 
+			section.defineOptFloat("defFloat", 1.0f);
+			section.defineOptListBoolean("defListBool", ':', listBool);
+			section.defineOptListEnum("defListEnum", "EnumT", ':', listEnum);
+			section.defineOptListFloat("defListFloat", ',', listFloat);
+			section.defineOptListSigned("defListSigned", ':', listBig);
+			section.defineOptListString("defListString", ',', listEnum);
+			section.defineOptListUnsigned("defListUnsigned", ':', listBig);
+			section.defineOptSigned("defSigned", new BigInteger("-15"));
+			section.defineOptString("defString", "Ah oj");
+			section.defineOptUnsigned("defUnsigned", new BigInteger("20"));
 		
+		}catch( Exception e) { System.out.println(e.toString()); }
+		
+		// Nacteni konfigurace
 		try {
 			iniP.readFile("test.ini");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+		// Zapsani konfigurace
 		try {
-			iniP.writeFile("output.ini");
+			iniP.writeFile("output.ini", false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

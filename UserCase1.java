@@ -11,28 +11,29 @@ public class UserCase1 {
 	 */
 	public static void main(String[] args) {
 		
-		IniParser iniP = new IniParserImpl();
-		
+		IniParser iniParser = new IniParserImpl();
 		IniSection section = null;
-		// define config file structure
+		
+		// Definice struktury konfiguracniho souboru.
 		try{
-			section = iniP.addSection("Database");
+			// Definice sekce
+			section = iniParser.addSection("Database");
 
-			// both options are mandatory
+			// Definice povinnych voleb
 			section.defineOptString("user");
 			section.defineOptString("pass");
-			// secure, with default value
+			
+			// Definice volby s defaultni hodnotou
 			section.defineOptBoolean("secure", true);
 
 		} catch( Exception e) {
 			System.out.println(e.toString());
 		}
-		// rest of initialization
 
 
-		// read configuration
+		// Nacteni konfigurace ze souboru
 		try {
-			iniP.readFile("database.ini");
+			iniParser.readFile("database.ini");
 		} catch (IOException e) {
 			// catch any io exception
 			e.printStackTrace();
@@ -43,10 +44,27 @@ public class UserCase1 {
 
 
 		try {
-			// access parsed data
-			iniP.getSection("Database").getOption("user").getValueString();
-			iniP.getSection("Database").getOption("pass").getValueString();
-			iniP.getSection("Database").getOption("secure").getValueBool();
+			// Pristup ke konfiguraci
+			
+			// Primy pristup pres IniParser
+			String userName = 
+				iniParser.getOption("Database","user").getValueString();
+			
+			// Pristup pres sekci
+			IniSection databaseSection = iniParser.getSection("Database");
+			
+			String password = 
+				databaseSection.getOption("pass").getValueString();
+			
+			// Typovany pristup k volbe typu boolean
+			boolean secureAccess = 
+				databaseSection.getOption("secure").getValueBool();
+			
+			System.out.println("User: " + userName);
+			System.out.println("Pasword: " + password);
+			System.out.println("Secure access: " + secureAccess);
+			
+			
 		} catch (IniException e) {
 			System.err.println(e.toString());
 		}

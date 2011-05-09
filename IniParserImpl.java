@@ -59,10 +59,26 @@ public class IniParserImpl implements IniParser {
 	 */
 	public static final char DELIM_OPTION = '=';
 
+	/** 
+	 * Parsovana sekce, do ktere patri pridavane volby
+	 */
 	private IniSection parsedSection = null;
-	private ParserAttitude parserAttitude = ParserAttitude.UNDEF;
+	
+	/**
+	 * Seznam naparsovanych komentaru - musi se porzdrzet,
+	 * nebot nalezi k objektu ktery jeste nebyl naparsovan
+	 */
 	private LinkedList<String> parsedCommentsList = null;
+	
+	/**
+	 * Parsovany radkovy komentar
+	 */
 	private String parsedInlineComment = null;
+	
+	/**
+	 * Rezim parseru
+	 */
+	private ParserAttitude parserAttitude = ParserAttitude.STRICT;
 	
 	/**
 	 * Konstruktor, defaultni rezim STRICT
@@ -94,7 +110,13 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void createEnumType(String enumName, String[] values) {
+	public void createEnumType(String enumName, String[] values) 
+		throws BadValueException{
+		
+		if(enumMap.containsKey(enumName))
+			throw new BadValueException("Enum " + enumName + 
+					" already exists");
+		
 		Set<String> enumValues = new HashSet<String>();
 
 		for(String val : values)

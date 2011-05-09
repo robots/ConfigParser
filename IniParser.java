@@ -369,8 +369,10 @@ public interface IniParser {
 	 * Vytvori vyctovy typ zadaneho nazvu a hodnot
 	 * @param enumName nazev vyctoveho typu
 	 * @param values pripustne hodnoty vyctoveho typu
+	 * @throws BadValueException v pripade, ze vyctovy typ uz byl definovan
 	 */
-	public void createEnumType(String enumName, String[] values);
+	public void createEnumType(String enumName, String[] values) 
+		throws BadValueException;
 	
 	/**
 	 * Zjisti, zda jen hodnota platna pro dany vyctovy typ
