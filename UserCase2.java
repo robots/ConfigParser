@@ -55,6 +55,12 @@ public class UserCase2 {
 			section.defineOptSigned("defSigned", new BigInteger("-15"));
 			section.defineOptString("defString", "Ah oj");
 			section.defineOptUnsigned("defUnsigned", new BigInteger("20"));
+			
+			section = iniP.addSection("Section2");
+			section.defineOptSigned("secSigned");
+			section.defineOptSigned("secSigned2");
+			section.defineOptSigned("secSigned3");
+			
 		
 		}catch( Exception e) { System.out.println(e.toString()); }
 		
@@ -64,7 +70,7 @@ public class UserCase2 {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		// Zapsani konfigurace
 		try {
 			iniP.writeFile("output.ini", false);

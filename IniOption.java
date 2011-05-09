@@ -356,7 +356,7 @@ public class IniOption {
 		if(this.type != OptionType.SIGNED)
 			throw new BadTypeException("Requested option is not of type Signed");
 		
-		return new BigInteger(this.getValue());
+		return createBigIntFromString(this.getValue());
 	}
 	
 	/**
@@ -372,7 +372,7 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of " +
 					"type Unsigned");
 		
-		return new BigInteger(this.getValue());
+		return createBigIntFromString(this.getValue());
 	}
 	
 	/**
@@ -540,7 +540,7 @@ public class IniOption {
 		
 		for(Element element : elementValues)
 		{
-			resultList.add( new BigInteger(element.getValue()));
+			resultList.add( createBigIntFromString(element.getValue()));
 		}
 		
 		return resultList;
@@ -569,7 +569,7 @@ public class IniOption {
 		
 		for(Element element : elementValues)
 		{
-			resultList.add( new BigInteger(element.getValue()));
+			resultList.add( createBigIntFromString(element.getValue()));
 		}
 		
 		return resultList;
@@ -1032,6 +1032,33 @@ public class IniOption {
 		}
 		
 		throw new BadValueException("Bad value of boolean option: " + stringValue);
+	}
+	
+	/**
+	 * Naparsuje BigInteger za zadaneho retezce podle nasledujici konvence:
+	 * prefix 0x urcuje sestnactkovy zapis
+	 * prefix 0b urcuje binarni zapis
+	 * prefix 0 urcuje osmickovy zapis
+	 * ostatni se povazuje za desitkovy zapis
+	 * @param value retezec, z nehoz se parsuje hodnota
+	 * @return hodnota 
+	 */
+	private BigInteger createBigIntFromString(String value) {
+		
+		// Sestnactkova soustava
+		if(value.startsWith("0x"))
+			return new BigInteger(value.substring(2), 16);
+		
+		// Dvojkova soustava
+		if(value.startsWith("0b"))
+			return new BigInteger(value.substring(2), 2);
+		
+		// Osmickova soustava
+		if(value.startsWith("0"))
+			return new BigInteger(value.substring(1), 8);
+		
+		return new BigInteger(value);
+		
 	}
 	
 	
