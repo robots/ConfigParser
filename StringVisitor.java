@@ -11,11 +11,25 @@ import java.util.ListIterator;
  *
  */
 public class StringVisitor implements IniVisitor {
+	
+	/**
+	 * String builder pro konstrukci vypisovaneho retezce
+	 */
 	private StringBuilder sb;
+	
+	/**
+	 * Ulozeni informace, zda se maji vypisovat i defaultni hodnoty
+	 */
+	private boolean includeDefaultValues;
 
-	public StringVisitor()
+	/**
+	 * Konstruktor visitoru pro vypis konfigurace
+	 * @param includeDefaultValues zda se maji vypisovat defaultni konfigurace
+	 */
+	public StringVisitor(boolean includeDefaultValues)
 	{
 		sb = new StringBuilder();
+		this.includeDefaultValues = includeDefaultValues;
 	}
 
 	/**
@@ -113,7 +127,7 @@ public class StringVisitor implements IniVisitor {
 	 */
 	private void visitSingleValueOption(IniOption option)
 	{
-		if(!option.hasDefinedValue()) 
+		if(!includeDefaultValues() && !option.hasDefinedValue()) 
 			return;
 		
 		try {
@@ -132,7 +146,7 @@ public class StringVisitor implements IniVisitor {
 	 */
 	private void visitListValueOption(IniOption option)
 	{
-		if(!option.hasDefinedValue()) 
+		if(!includeDefaultValues() && !option.hasDefinedValue()) 
 			return;
 		
 		try {
@@ -172,5 +186,14 @@ public class StringVisitor implements IniVisitor {
 			output += c;
 		}
 		return output;
+	}
+	
+	/**
+	 * Zjisti, zda se maji vypisovat i defaultni hodnoty
+	 * @return true, pokud se maji vypisovat defaultni hodnoty.
+	 * false jinak
+	 */
+	private boolean includeDefaultValues() {
+		return this.includeDefaultValues;
 	}
 }

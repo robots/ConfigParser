@@ -29,10 +29,12 @@ public interface IniParser {
 	/**
 	 * Zapis konfigurace do souboru
 	 * @param fileName nazev souboru
+	 * @param includeDefaultValues zda se maji vypisovat defaultni hodnoty
 	 * @throws IOException V pripade chyby zapisu
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeFile(String fileName) throws IOException, ParserException;
+	public void writeFile(String fileName, boolean includeDefaultValues) 
+		throws IOException, ParserException;
 	
 	/**
 	 * Cteni konfigurace ze streamu
@@ -46,11 +48,12 @@ public interface IniParser {
 	/**
 	 * Zapis konfigurace do streamu
 	 * @param outStream vystupni stream
+	 * @param includeDefaultValues zda se maji vypisovat defaultni hodnoty
 	 * @throws IOException V pripade chyby zapisu
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public void writeStream(OutputStream outStream) 
-		throws IOException, ParserException;
+	public void writeStream(OutputStream outStream,
+			boolean includeDefaultValues) throws IOException, ParserException;
 	
 	/**
 	 * Cteni konfigurace ze stringu
@@ -61,10 +64,12 @@ public interface IniParser {
 	
 	/**
 	 * Zapis konfigurace do stringu
+	 * @param includeDefaultValues zda se maji vypisovat defaultni hodnoty
 	 * @return string se zapsanou konfiguraci
 	 * @throws ParserException V pripade chyby parsovania
 	 */
-	public String writeString() throws ParserException;
+	public String writeString(boolean includeDefaultValues) 
+		throws ParserException;
 
 	/**
 	 * Zjisteni hodnoty z volby bez kontroly typu

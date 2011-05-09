@@ -71,6 +71,18 @@ public class IniOption {
 	private IniParser parser;
 	
 	/**
+	 * Pripustne pravdive hodnoty volby typu boolean
+	 */
+	private final String[] specialBooleanTrue = 
+		{"true", "1", "t", "y", "on", "yes", "enabled",};
+	
+	/**
+	 * Pripustne nepravdive hodnoty vobly typu boolean 
+	 */
+	private final String[] specialBooleanFalse =
+		{"false", "0", "f", "n", "off", "no", "disabled" };
+	
+	/**
 	 * Metoda pro inicializaci private promennych
 	 * @param name nazev volby
 	 * @param type typ volby
@@ -321,7 +333,15 @@ public class IniOption {
 			throw new BadTypeException("Requested option is not of " +
 					"type Boolean");
 		
-		return Boolean.parseBoolean(this.getValue());
+		boolean result = false;
+		
+		try {
+			result = getSpecialBooleanValue(this.getValue());
+		} catch (BadValueException e) {
+			System.err.println(e.toString());
+		}
+		
+		return result; 
 	}
 	
 	/**
@@ -429,7 +449,11 @@ public class IniOption {
 		
 		for(Element element : elementValues)
 		{
-			resultList.add(Boolean.parseBoolean(element.getValue()));
+			try {
+			resultList.add(getSpecialBooleanValue(element.getValue()));
+			} catch (BadValueException e) {
+				System.err.println(e.toString());
+			}
 		}
 		
 		return resultList;
@@ -717,10 +741,10 @@ public class IniOption {
 		
 		List<Element> listVal = valueList;
 		
-		if(listVal== null)
+		if(listVal== null || listVal.isEmpty())
 			listVal = defaultValueList;
 		
-		if(listVal == null)
+		if(listVal == null || listVal.isEmpty())
 			return null;
 		
 		Element elementValue = listVal.get(0);
@@ -979,6 +1003,23 @@ public class IniOption {
 		}
 		
 		this.setElementList(elementList);
+	}
+	
+	private boolean getSpecialBooleanValue(String stringValue) throws BadValueException
+	{
+		for(String trueVal : specialBooleanTrue)
+		{
+			if(stringValue.equals(trueVal))
+				return true;
+		}
+		
+		for(String falseVal: specialBooleanFalse)
+		{
+			if(stringValue.equals(falseVal))
+				return false;
+		}
+		
+		throw new BadValueException("Bad value of boolean option: " + stringValue);
 	}
 	
 	

@@ -38,6 +38,7 @@ public final class Patterns {
 	public static final String PATTERN_SECTION_STRICT = 
 		"\\[[a-zA-Z\\.\\:\\$][a-zA-Z0-9\\_\\~\\-\\.\\:\\$\\ ]*\\]";
 	
+	
 	/**
 	 * Trida neni instanciovatelna
 	 */

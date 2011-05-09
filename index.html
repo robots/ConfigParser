@@ -1,0 +1,97 @@
+<html>
+<head><title>Knihovna pro praci s ini soubory</title></head>
+<body>
+
+<h1>Knihovna pro praci s ini soubory</h1>
+
+<p>
+Nase knihovna pro praci s ini soubory se sklada z nekolika 
+propojenych trid.
+</p>
+ 
+<p>
+Rozhrani popisujici hlavni tridu je 
+<a href="documentation/IniParser.html">IniParser</a>. Toto rozhrani
+implementuje trida
+<a href="documentation/IniParserImpl.html">IniParserImpl</a>.</br>
+Uvnitr IniParseru jsou jednotlive sekce. Tyto jsou popsany rozhranim
+<a href="documentation/IniSection.html">IniSection</a> a implementacni
+tridou tohoto rozhrani je 
+<a href="documentation/IniSectionImpl.html">IniSectionImpl</a>.<br>
+Kazda sekce sdruzuje prislusne
+<a href="documentation/IniOption.html">Volby</a>.
+</p>
+
+<p>
+Definice struktury ini souboru probiha pomoci volani definicnich metod.
+Uzivatel muze tyto metody volat primo na objektu celeho 
+<a href="documentation/IniParser.html">Ini Parseru</a> <br>
+s udanim nazvu volby a nazvu sekce do niz volba patri, 
+nebo pres prislusnou <a href="documentation/IniSection.html">Sekci</a>
+s udanim nazvu volby.<br>
+K dispozici jsou metody pro definici vsech povolenych typu voleb a jejich
+sesterske metody pro seznamove volby techto typu. <br>
+Definice knihovna povazuje za usporadane, tedy ve vystupu budou sekce a volby
+v tom poradi,<br>
+v nemz byly definovany.
+</p>
+
+<p>
+Pohodlny pristup k jednotlivym volbam je umoznen pres vyhledavaci metodu
+getOption, ktera podle zadaneho nazvu sekce a nazvu volby<br>
+vrati prislusnou volbu pro dalsi praci. Samotna 
+<a href="documentation/IniOption.html">Volba</a> pak umoznuje pohodlny pristup
+k hodnotam a vsem potrebnym informacim, <br>
+jako je typ volby, zda jde o jednohodnotovou nebo seznamovou volbu, apod.
+</p>
+
+<p>Pro ilustraci muzete nahlednout do 
+<a href="UserCase1.java">jednoducheho prikladu</a>.
+Priklad vyuziva 
+<a href="Database.ini">konfiguracni soubor</a> a je spustitelny, 
+muzete si vyzkouset jaky bude jeho vystup<br>
+</p>
+
+<p>
+Druhou moznosti pristupu k jednotlivym sekcim a volbam je pouziti
+<a href="documentation/IniVisitor.html">Visitora</a>. Diky faktu, ze knihovna
+implementuje <i>Visitor design pattern</i>,<br>
+ma uzivatel velkou volnost pri praci s jednotlivymi sekcemi a volbami. 
+Napriklad ma moznost definovat vlastni visitor tridu, ktera bude 
+kontrolovat<br>
+dalsi integritni omezeni, ktera nelze postihnout v popisu struktury
+konfiguracniho souboru. Vyhodou je take moznost upravy vystupniho formatu a
+pripadneho <br>
+dodefinovani dalsich vystupnich moznosti diky moznosti pustit do struktury
+vlastniho visitora.
+</p>
+
+<p>
+Knihovna umi pracovat s konfiguracemi ve forme Stringu, souboru a Streamu.
+Kazda z metod pro vyvolani zapisu ma moznost urcit, <br>
+zda se maji ve vypisu uvadet i defaultni hodnoty voleb.
+Pro ilustraci muzete nahlednout do 
+<a href="UserCase2.java">druheho prikladu</a>, ktery vyuziva nasledujici<br>
+<a href="test.ini">konfiguracni soubor</a> a zapisuje do 
+<a href="output.ini">vystupniho souboru</a>
+</p>
+
+
+
+<p>
+K hlaseni chyb pouziva knihovna 
+<a href="documentation/IniException.html">vyjimky</a><br>
+</p>
+
+<p>Podrobnejsi popis naleznete v 
+<a href="Navrh.txt">Navrhu</a>
+</p>
+
+<p> K dispozici je samozrejme
+<a href="documentation/index.html">Dokumentace</a> jednotlivych soucasti 
+knihovny.
+</p>
+
+
+</body>
+</html>

@@ -137,8 +137,6 @@ public class IniParserImpl implements IniParser {
 		IniSection section = findSection(sectionName);
 		IniOption opt = section.getOption(option);
 
-		//TODO what if referencing list?
-		
 		String value = null;
 		
 		try {
@@ -462,26 +460,26 @@ public class IniParserImpl implements IniParser {
 	}
 
 	@Override
-	public void writeFile(String fileName) 
+	public void writeFile(String fileName, boolean includeDefaultValues) 
 		throws IOException,	ParserException {
 		
 		File file = new File(fileName);
 		FileOutputStream fs = new FileOutputStream(file);
 
-		this.writeStream(fs);
+		this.writeStream(fs, includeDefaultValues);
 		fs.close();
 	}
 
 	@Override
-	public void writeStream(OutputStream outStream) 
+	public void writeStream(OutputStream outStream, boolean includeDefaultValues) 
 		throws IOException, ParserException {
 		
-		String data = this.writeString();
+		String data = this.writeString(includeDefaultValues);
 		outStream.write(data.getBytes());
 	}
 
 	@Override
-	public String writeString() throws ParserException {
+	public String writeString(boolean includeDefaultValues) throws ParserException {
 		CheckVisitor cv = new CheckVisitor();
 		this.accept(cv);
 
@@ -489,7 +487,7 @@ public class IniParserImpl implements IniParser {
 			throw new ParserException("Mandatory options not defined");
 		}
 
-		StringVisitor sv = new StringVisitor();
+		StringVisitor sv = new StringVisitor(includeDefaultValues);
 		this.accept(sv);
 
 		return sv.getString();
