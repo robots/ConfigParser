@@ -417,6 +417,9 @@ public class IniParserImpl implements IniParser {
 
 	@Override
 	public void accept(IniVisitor visitor) {
+		if(visitor == null)
+			return;
+		
 		for( IniSection section : sectionList)
 		{
 			section.accept(visitor);
@@ -428,27 +431,27 @@ public class IniParserImpl implements IniParser {
 	@Override
 	public void readFile(String fileName) throws IOException, ParserException {
 		File file = new File(fileName);
-		FileInputStream fs = new FileInputStream(file);
+		FileInputStream inStream = new FileInputStream(file);
 
-		this.readStream(fs);
-		fs.close();
+		this.readStream(inStream);
+		inStream.close();
 	}
 
 	@Override
 	public void readStream(InputStream inStream) 
 		throws IOException, ParserException {
 		
-		BufferedReader br = new BufferedReader(
+		BufferedReader reader = new BufferedReader(
 				new	InputStreamReader(inStream));
 		
-		StringBuilder sb = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		String line = null;
 
-		while ((line = br.readLine()) != null) {
-			sb.append(line + "\n");
+		while ((line = reader.readLine()) != null) {
+			builder.append(line + "\n");
 		}
 
-		this.readString(sb.toString());
+		this.readString(builder.toString());
 	}
 
 	@Override
@@ -473,10 +476,10 @@ public class IniParserImpl implements IniParser {
 			parseFinish();
 		}
 
-		CheckVisitor cv = new CheckVisitor();
-		this.accept(cv);
+		CheckVisitor checkVisitor = new CheckVisitor();
+		this.accept(checkVisitor);
 
-		if (!cv.isOK()) {
+		if (!checkVisitor.isOK()) {
 			throw new ParserException("Mandatory options not defined");
 		}
 	}
@@ -486,33 +489,33 @@ public class IniParserImpl implements IniParser {
 		throws IOException,	ParserException {
 		
 		File file = new File(fileName);
-		FileOutputStream fs = new FileOutputStream(file);
+		FileOutputStream outStream = new FileOutputStream(file);
 
-		this.writeStream(fs, includeDefaultValues);
-		fs.close();
+		this.writeStream(outStream, includeDefaultValues);
+		outStream.close();
 	}
 
 	@Override
 	public void writeStream(OutputStream outStream, boolean includeDefaultValues) 
 		throws IOException, ParserException {
 		
-		String data = this.writeString(includeDefaultValues);
-		outStream.write(data.getBytes());
+		String outString = this.writeString(includeDefaultValues);
+		outStream.write(outString.getBytes());
 	}
 
 	@Override
 	public String writeString(boolean includeDefaultValues) throws ParserException {
-		CheckVisitor cv = new CheckVisitor();
-		this.accept(cv);
+		CheckVisitor checkVisitor = new CheckVisitor();
+		this.accept(checkVisitor);
 
-		if (!cv.isOK()) {
+		if (!checkVisitor.isOK()) {
 			throw new ParserException("Mandatory options not defined");
 		}
 
-		StringVisitor sv = new StringVisitor(includeDefaultValues);
-		this.accept(sv);
+		StringVisitor stringVisitor = new StringVisitor(includeDefaultValues);
+		this.accept(stringVisitor);
 
-		return sv.getString();
+		return stringVisitor.getString();
 	}
 
 	/**
@@ -596,15 +599,15 @@ public class IniParserImpl implements IniParser {
 	 * @return vysledok parsovania - true/false
 	 */
 	private boolean parseSection(String input) {
-		Pattern patId = Pattern.compile(Patterns.PATTERN_ID);
-		Matcher m = patId.matcher(input);
+		Pattern idPattern = Pattern.compile(Patterns.PATTERN_ID);
+		Matcher  idMatcher= idPattern.matcher(input);
 
-		if (!m.find()) {
+		if (!idMatcher.find()) {
 			System.err.println("Section identifier expected");
 			return false;
 		}
 
-		String sectionID = m.toMatchResult().group();
+		String sectionID = idMatcher.toMatchResult().group();
 
 		boolean autocreate = false;
 		if (parserAttitude != ParserAttitude.STRICT) {
@@ -642,15 +645,15 @@ public class IniParserImpl implements IniParser {
 			return false;
 		}
 
-		Pattern patId = Pattern.compile(Patterns.PATTERN_ID_STRICT);
-		Matcher m_id = patId.matcher(parts[0]);
+		Pattern idPattern = Pattern.compile(Patterns.PATTERN_ID_STRICT);
+		Matcher idMatcher = idPattern.matcher(parts[0]);
 
-		if (!m_id.find()) {
+		if (!idMatcher.find()) {
 			System.err.println("Identifier expected");
 			return false;
 		}
 
-		String optionID = m_id.toMatchResult().group();
+		String optionID = idMatcher.toMatchResult().group();
 		String optionValue = parts[1];
 
 		if (parsedSection == null) {
@@ -715,23 +718,23 @@ public class IniParserImpl implements IniParser {
 	 * @return vycisteny vystup
 	 */
 	private String trimSpacesSpecial(String input) {
-		boolean isBS = false;
+		boolean isBackslash = false;
 
 		String output = new String();
 
 		for (char c : input.toCharArray()) {
 			if (c == CHAR_BACKSLASH) {
-				isBS = true;
+				isBackslash = true;
 				continue;
 			}
 
-			if (!isBS) {
+			if (!isBackslash) {
 				if (c == CHAR_SPACE) {
 					continue;
 				}
 			}
 
-			isBS = false;
+			isBackslash = false;
 
 			output += c;
 		}
