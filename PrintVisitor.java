@@ -2,8 +2,8 @@
 /**
  * Konkretni implementace interface IniVisitor.
  * 
- * Ukazka implementacie IniVisitor-a na kontrolu/spracovanie
- * konfiguracneho stromu
+ * Ukazka implementacie IniVisitor-a na kontrolu/zpracovani
+ * konfiguracniho stromu
  *
  * @author Vladimir Fiklik, Michal Demin
  *
@@ -25,6 +25,9 @@ public class PrintVisitor implements IniVisitor {
 	@Override
 	public void visit(IniOption option) {
 		
+		// Zjisteni zda se jedna o jednohodnotovou volbu 
+		// nebo list volbu a vyvolani prislusne obsluhy
+		
 		if(option.isList())
 			visitListValueOption(option);
 		else 
@@ -32,11 +35,18 @@ public class PrintVisitor implements IniVisitor {
 
 	}
 	
+	/**
+	 * Navstiveni jednohodnotove volby
+	 * @param option zpracovavana volba
+	 */
 	private void visitSingleValueOption(IniOption option)
 	{
 		try {
 			
 			String value = "Not Defined";
+			
+			// Zpracovani volby podle typu metodami pro pristup
+			// k jednohodnotove volbe
 			switch(option.getType()) {
 			
 			case BOOLEAN:
@@ -80,11 +90,18 @@ public class PrintVisitor implements IniVisitor {
 		}
 	}
 
+	/**
+	 * Zpracovani lsit-volby
+	 * @param option zpracovavana volba
+	 */
 	private void visitListValueOption(IniOption option)
 	{
 	try {
 			
 			String value = "Not Defined";
+			
+			// Zpracovani volby podle typu metodami pro pristup
+			// k list-volbe
 			switch(option.getType()) {
 			
 			case BOOLEAN:
