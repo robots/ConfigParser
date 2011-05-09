@@ -8,7 +8,7 @@
  *
  */
 public class CheckVisitor implements IniVisitor {
-	private boolean checkOK = true;
+	private boolean checkStatus = true;
 	private IniSection lastSection = null;
 
 	/**
@@ -17,8 +17,8 @@ public class CheckVisitor implements IniVisitor {
 	 * @return true, pokud byly pozadavky na mandatory polozky splneny
 	 * false jinak
 	 */
-	public boolean isOK() {
-		return checkOK;
+	public boolean mandatoryCheck() {
+		return checkStatus;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class CheckVisitor implements IniVisitor {
 			return;
 		}
 
-		this.checkOK = false;
+		this.checkStatus = false;
 
 		System.err.print("In section '" + lastSection.getName() + "' option '"
 			+ option.getName() + "' is mandatory, yet no value defined!!");

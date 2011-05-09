@@ -29,15 +29,13 @@ public class Element {
 	 * @return true, pokud je hodnota referencovana, false jinak
 	 */
 	public boolean isReference() {
-		Pattern p = Pattern.compile(Patterns.PATTERN_REFER);
-		Matcher m = p.matcher(this.value);
+		Pattern referPattern = Pattern.compile(Patterns.PATTERN_REFER);
+		Matcher referMatcher = referPattern.matcher(this.value);
 
-		if (m.find()) {
-			//System.err.println(" ehe ");
+		if (referMatcher.find()) {
 			return true;
 		}
-
-		//System.err.println(" ee ");
+		
 		return false;
 	}
 

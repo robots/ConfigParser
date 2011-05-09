@@ -288,7 +288,8 @@ public class IniSectionImpl implements IniSection {
 				Element element = new Element();
 				
 				if(! parser.isValidForEnum(enumName, strVal))
-					throw new BadValueException("Invalid Value");
+					throw new BadValueException("Invalid Value " + strVal + 
+							" for enum " + enumName);
 				
 				element.setValue(strVal);
 				defaultValues.add(element);
@@ -478,7 +479,7 @@ public class IniSectionImpl implements IniSection {
 		ListIterator<IniOption> itr = optionList.listIterator();
 
 		while (itr.hasNext()) {
-			IniOption opt = (IniOption)itr.next();
+			IniOption opt = itr.next();
 
 			if (opt.getName().equals(option)) {
 				return opt;

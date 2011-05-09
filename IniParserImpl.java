@@ -479,7 +479,7 @@ public class IniParserImpl implements IniParser {
 		CheckVisitor checkVisitor = new CheckVisitor();
 		this.accept(checkVisitor);
 
-		if (!checkVisitor.isOK()) {
+		if (!checkVisitor.mandatoryCheck()) {
 			throw new ParserException("Mandatory options not defined");
 		}
 	}
@@ -508,7 +508,7 @@ public class IniParserImpl implements IniParser {
 		CheckVisitor checkVisitor = new CheckVisitor();
 		this.accept(checkVisitor);
 
-		if (!checkVisitor.isOK()) {
+		if (!checkVisitor.mandatoryCheck()) {
 			throw new ParserException("Mandatory options not defined");
 		}
 

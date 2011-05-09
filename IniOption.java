@@ -769,7 +769,7 @@ public class IniOption {
 		if(listVal== null)
 			listVal = defaultValueList;
 
-		LinkedList<Element> output = new LinkedList<Element>();
+		LinkedList<Element> outList = new LinkedList<Element>();
 		ListIterator<Element> itr = listVal.listIterator();
 
 		// solve references in list
@@ -777,13 +777,13 @@ public class IniOption {
 			Element elem = (Element)itr.next();
 			
 			if (elem.isReference()) {
-				output.add(new Element(solveReference(elem)));
+				outList.add(new Element(solveReference(elem)));
 			} else {
-				output.add(elem);
+				outList.add(elem);
 			}
 		}
 		
-		return output;
+		return outList;
 		
 	}
 	
@@ -863,23 +863,23 @@ public class IniOption {
 		String referencedOption = null;
 		
 		// Find the reference-part of value
-		Pattern refPattern = Pattern.compile(Patterns.PATTERN_ID);
-		Matcher refMatcher = refPattern.matcher(
+		Pattern idPattern = Pattern.compile(Patterns.PATTERN_ID);
+		Matcher idMatcher = idPattern.matcher(
 				element.getValue().substring(1));
 		
 		// Find first identifier = section name
-		if (!refMatcher.find()) {
+		if (!idMatcher.find()) {
 			System.err.println("Fatal error");
 		}
 
-		referencedSection = refMatcher.toMatchResult().group();
+		referencedSection = idMatcher.toMatchResult().group();
 	
 		// Find second identifier = option name
-		if (!refMatcher.find()) {
+		if (!idMatcher.find()) {
 			System.err.println("Fatal error");
 		}
 
-		referencedOption = refMatcher.toMatchResult().group();
+		referencedOption = idMatcher.toMatchResult().group();
 
 		// Find referenced value
 		String referencedValue = parser.getUntyped(referencedSection, 
@@ -1005,7 +1005,19 @@ public class IniOption {
 		this.setElementList(elementList);
 	}
 	
-	private boolean getSpecialBooleanValue(String stringValue) throws BadValueException
+	/**
+	 * Vrati boolean value na zaklade ruznych moznych stringu reprezentujicich
+	 * boolean hodnoty. 
+	 * Pro true jsou pripustne stringy uvedeny v poli specialBooleanTrue
+	 * Pro false jsou pripustne stringy uvedeny v poli specialBooleanFalse
+	 * @param stringValue retezec, z nehoz se parsuje boolean hodnota
+	 * @return true pokud retezec patri mezi retezce povolene pro true,
+	 * false pokud retezec patri mezi retezce povolene pro false
+	 * @throws BadValueException V pripade ze retezec je pro typ boolean
+	 * neplatny
+	 */
+	private boolean getSpecialBooleanValue(String stringValue) 
+		throws BadValueException
 	{
 		for(String trueVal : specialBooleanTrue)
 		{

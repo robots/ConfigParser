@@ -15,7 +15,7 @@ public class StringVisitor implements IniVisitor {
 	/**
 	 * String builder pro konstrukci vypisovaneho retezce
 	 */
-	private StringBuilder sb;
+	private StringBuilder builder;
 	
 	/**
 	 * Ulozeni informace, zda se maji vypisovat i defaultni hodnoty
@@ -28,7 +28,7 @@ public class StringVisitor implements IniVisitor {
 	 */
 	public StringVisitor(boolean includeDefaultValues)
 	{
-		sb = new StringBuilder();
+		builder = new StringBuilder();
 		this.includeDefaultValues = includeDefaultValues;
 	}
 
@@ -38,7 +38,7 @@ public class StringVisitor implements IniVisitor {
 	 */
 	public String getString()
 	{
-		return sb.toString();
+		return builder.toString();
 	}
 
 	/**
@@ -54,7 +54,8 @@ public class StringVisitor implements IniVisitor {
 		ListIterator<String> itr = comments.listIterator();
 
 		while (itr.hasNext()) {
-			sb.append(IniParserImpl.DELIM_COMENT + " " + itr.next() + "\n");
+			builder.append(IniParserImpl.DELIM_COMENT + " " + 
+					itr.next() + "\n");
 		}
 	}
 
@@ -67,7 +68,7 @@ public class StringVisitor implements IniVisitor {
 		if ((comment == null) || (comment.length() == 0))
 			return;
 
-		sb.append(" " + IniParserImpl.DELIM_COMENT + " " + comment);
+		builder.append(" " + IniParserImpl.DELIM_COMENT + " " + comment);
 	}
 
 	/**
@@ -87,15 +88,15 @@ public class StringVisitor implements IniVisitor {
 	 */
 	@Override
 	public void visit(IniSection section) {
-		sb.append("\n\n");
+		builder.append("\n\n");
 
 		addPriorComment(section.getPriorComments());
-		sb.append("[" + section.getName() + "]");
+		builder.append("[" + section.getName() + "]");
 
 		String comment = section.getInlineComment();
 		addInlineComment(comment);
 
-		sb.append("\n");
+		builder.append("\n");
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class StringVisitor implements IniVisitor {
 		String comment = option.getInlineComment();
 		addInlineComment(comment);
 
-		sb.append("\n");
+		builder.append("\n");
 	}
 	
 	/**
@@ -133,8 +134,8 @@ public class StringVisitor implements IniVisitor {
 		try {
 			String value = option.getValue();
 
-			sb.append(addBs(option.getName()) + " " + 
-					IniParserImpl.DELIM_OPTION + " " + addBs(value));
+			builder.append(addBackslash(option.getName()) + " " + 
+					IniParserImpl.DELIM_OPTION + " " + addBackslash(value));
 		} catch (Exception e) {
 		}
 	}
@@ -157,14 +158,14 @@ public class StringVisitor implements IniVisitor {
 
 			while (itr.hasNext()) {
 				Element elem = itr.next();
-				value = value + addBs(elem.getValue());
+				value = value + addBackslash(elem.getValue());
 
 				if (itr.hasNext()) {
 					value = value + option.getDelimiter();
 				}
 			}
 			
-			sb.append(addBs(option.getName()) + " " + 
+			builder.append(addBackslash(option.getName()) + " " + 
 					IniParserImpl.DELIM_OPTION + " " + value);
 		} catch (Exception e) {
 		}
@@ -175,7 +176,7 @@ public class StringVisitor implements IniVisitor {
 	 * @param input vstupny retazec.
 	 * @return backslashovany vystup
 	 */
-	private String addBs(String input)
+	private String addBackslash(String input)
 	{
 		String output = new String();
 
